@@ -1,0 +1,32 @@
+{
+  "Motion-Reconstruction": {
+    "m2m_recon": {
+      "class": "m2m_recon",
+      "input": [
+        "Reconstruct the complete motion sequence from the given motion cue: <Motion_Placeholder_s1>",
+        "Recover the original full-body movement from this compressed motion signal: <Motion_Placeholder_s1>",
+        "Use the provided motion hint to regenerate the full motion: <Motion_Placeholder_s1>",
+        "Infer and reconstruct the full human motion based on this partial motion evidence: <Motion_Placeholder_s1>",
+        "Restore the original movement trajectory from this reduced motion input: <Motion_Placeholder_s1>",
+        "Given this low-information motion condition, reconstruct the complete motion: <Motion_Placeholder_s1>",
+        "Generate the full motion by recovering missing motion details from: <Motion_Placeholder_s1>",
+        "Densify and reconstruct the target human motion from this sparse motion cue: <Motion_Placeholder_s1>",
+        "Complete the motion reconstruction using the provided motion context: <Motion_Placeholder_s1>",
+        "Predict and restore the full-body action sequence from: <Motion_Placeholder_s1>",
+        "Recover the original temporal dynamics from this motion snippet: <Motion_Placeholder_s1>",
+        "Rebuild the full motion pattern from the given motion condition: <Motion_Placeholder_s1>",
+        "Use this motion condition to reconstruct a coherent full motion sequence: <Motion_Placeholder_s1>",
+        "Reconstruct complete human movement with plausible continuity from: <Motion_Placeholder_s1>",
+        "Fill in missing motion information and recover the complete sequence: <Motion_Placeholder_s1>",
+        "Restore detailed human motion from this bottlenecked motion signal: <Motion_Placeholder_s1>",
+        "Recreate the target movement sequence from compressed motion evidence: <Motion_Placeholder_s1>",
+        "Recover full action semantics and dynamics from: <Motion_Placeholder_s1>",
+        "Generate the original motion sequence by reconstructing from: <Motion_Placeholder_s1>",
+        "Reconstruct this motion into a complete and smooth full-body sequence: <Motion_Placeholder_s1>"
+      ],
+      "output": [
+        "<Motion_Placeholder_s2>"
+      ]
+    }
+  }
+}

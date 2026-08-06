@@ -1,0 +1,238 @@
+# UniMotion Training Configuration - Stage 3 (LoRA rank=32)
+# Paper: Stage 2 (first phase) - image-conditioned tasks.
+# Tasks: img2pose (image -> single-frame pose, paper V2M) + img2text (image -> pose
+# description, paper V2T), ratios 0.8 / 0.2, on Human3.6M.
+# Learning rate: 6e-5.
+# Instruction template: instructions/img_template_instructions.json.
+# Initialized from the Stage 2b checkpoint (outputs/unimotion-stage2b/checkpoint-440000).
+# The TokenHMR pose branch (deps/pose/tokenhmr_model.ckpt) is enabled here for the first
+# time and kept frozen (run with no_grad).
+#
+# Frozen parameters:
+#   - showo: the Qwen LLM backbone is frozen (LoRA is still trained)
+#   - large vision encoder path (und_trans, position_embedding)
+#   - image_embedder_gen (image generation is not involved)
+#   - diffusion_head_a/b (image diffusion heads), diff_proj, time_embed
+#
+# Trainable parameters:
+#   - motion-related layers (motion_embedder, motion_diffusion_head, motion_pos_encoding)
+#   - image_embedder_und (image understanding PatchEmbed)
+#   - fusion_proj (image fusion projection)
+#   - LoRA-A/B: enabled and trained (rank=32)
+
+wandb:
+  entity: null
+  resume: 'auto'
+
+experiment:
+    project: "unimotion"
+    name: "unimotion-stage3"
+    output_dir: "outputs/unimotion-stage3"
+    save_every: 20000
+    generate_every: 30000
+    log_every: 50
+    log_grad_norm_every: 1000
+    resume_from_checkpoint: 'latest'
+    checkpoints_total_limit: 16
+
+model:
+    weight_type: "bfloat16"
+
+    # Image VAE (WAN21 VAE, frozen; encodes H36M images)
+    vae_model:
+        type: "wan21"
+        pretrained_model_path: "Wan2.1_VAE.pth"
+
+    # CMA Motion VAE (269-dim features, downsample_rate=4)
+    motion_vae:
+        pretrained_model_path: "pretrained/cma_vae.ckpt"
+        motion_latent_dim: 256
+        motion_nfeats: 269
+        downsample_rate: 4
+
+    # Show-o2 main model
+    showo:
+        model_name: "Showo2WithMotion"
+        load_from_showo: False
+        embedding_train_policy: "required"
+        # Initialize from your best Stage 1b checkpoint (our reference Vision-to-Text
+        # model was trained from an intermediate stage2b checkpoint).
+        pretrained_model_path: "outputs/unimotion-stage2b/checkpoint-440000"
+        llm_model_path: "Qwen/Qwen2.5-1.5B-Instruct"
+        llm_vocab_size: null
+        hidden_size: 1536
+
+        # Image/video settings
+        image_latent_dim: 16
+        image_latent_height: 27
+        image_latent_width: 27
+        hq_image_latent_height: 64
+        hq_image_latent_width: 64
+        mixed_modal_latent_height: 27
+        mixed_modal_latent_width: 27
+        patch_size: 2
+        num_diffusion_layers: 10
+        clip_latent_dim: 1152
+        add_qk_norm: True
+        add_time_embeds: True
+        clip_pretrained_model_path: "google/siglip-so400m-patch14-384"
+
+        # Motion settings (269-dim features, downsample_rate=4)
+        motion_latent_dim: 256
+        motion_nfeats: 269
+        motion_downsample_rate: 4
+        max_motion_length: 500
+        num_motion_diffusion_layers: 6
+        # Dual-Path Motion Embedder settings
+        motion_semantic_dim: 512
+        num_motion_semantic_layers: 4
+        pose_branch:
+            enabled: true
+            ckpt_path: "deps/pose/tokenhmr_model.ckpt"
+            strict_ckpt: true
+            apply_tasks: ['img2pose', 'img2text']
+            freeze_backbone: true
+            run_with_no_grad: true
+            input_size: 256
+            crop_width: 192
+            feature_dim: 1280
+            target_tokens_hw: [27, 27]
+
+        # Stage 3 freezing policy
+        # Frozen: Qwen LLM backbone, large vision encoder, image_embedder_gen
+        # Trained: motion-related modules + image_embedder_und + fusion_proj + LoRA-A/B
+        frozen_params: ['showo',                    # Qwen LLM backbone (LoRA-A is still trained)
+                       'und_trans',                  # SigLIP encoder (large module)
+                       'position_embedding',         # SigLIP position embedding
+                       'image_embedder_gen',         # image generation PatchEmbed (generation not involved)
+                       'diffusion_head_a',           # image diffusion head
+                       'diffusion_head_b',           # image diffusion head
+                       'diff_proj',                  # diffusion projection
+                       'time_embed']                 # timestep embedding (shared)
+        params_not_load: null
+
+    gradient_checkpointing: True
+
+dataset:
+    # Stage 3 tasks
+    tasks: ['img2pose', 'img2text']
+
+    # Number of image tokens (WAN21 VAE: 432 -> 54x54; PatchEmbed patch_size=2: 54/2=27, 27*27=729)
+    num_image_tokens: 729
+    image_resolution: 432
+
+    # H36M dataset
+    h36m:
+        data_root: "data/UNI_MOTION_269/H36M"
+        image_root: "data/Human3.6M_MMPose/processed/images_fps50_cropped_448x448"
+        instruction_template_path: "instructions/img_template_instructions.json"
+
+    # Motion settings (kept consistent with earlier stages; used for Mean/Std etc.)
+    motion:
+        data_root: "data/UNI_MOTION_269/HumanML3D"
+        latent_dir: null
+        max_motion_length: 200
+        min_motion_length: 20
+        unit_length: 1
+        fps: 20
+        downsample_rate: 4
+        motion_latent_dim: 256
+
+    params:
+        num_workers: 4
+        pin_memory: True
+        persistent_workers: True
+
+    preprocessing:
+        max_seq_length: 1024  # 729 image tokens + motion tokens + text + special tokens need more room
+        max_motion_tokens: 50
+        max_text_len: 256
+
+# Stage 3 training settings
+training:
+    stage: "lm_instruct"
+    instruction_type: "img"
+    instruction_template_path: "instructions/img_template_instructions.json"
+
+    gradient_accumulation_steps: 8
+    batch_size_t2m: 0          # T2M not trained
+    batch_size_m2t: 0          # M2T not trained
+    batch_size_pred: 0         # prediction not trained
+    batch_size_edit: 0         # edit not trained
+    batch_size_t2t: 0          # T2T not trained
+    batch_size_img2pose: 1     # image-to-pose batch size
+    batch_size_img2text: 1     # image-to-text batch size
+    mixed_precision: "bf16"
+    enable_tf32: True
+    seed: 42
+    max_train_steps: 200000
+    cond_dropout_prob: 0.1
+    label_smoothing: 0.0
+    max_grad_norm: 1.0
+    ntp_coeff: 1.0
+    flow_coeff: 0.8
+    und_max_t0: 1.0
+    img2pose_project_constant_dims: true
+    ddp_find_unused_parameters: true
+    img2pose_decode067_supervision:
+        enabled: true
+        weight: 0.2
+        dims: 67
+        loss_type: smooth_l1
+        warmup_steps: 3000
+        debug_every: 0
+
+    # Stage 3 task sampling ratios
+    img2pose_ratio: 0.8   # 80% image-to-pose
+    img2text_ratio: 0.2   # 20% image-to-text
+
+optimizer:
+    name: adamw
+    params:
+        learning_rate: 0.00006
+        scale_lr: False
+        beta1: 0.9
+        beta2: 0.999
+        weight_decay: 0.0
+        epsilon: 1e-8
+
+lr_scheduler:
+    scheduler: "constant_with_warmup"
+    params:
+        learning_rate: ${optimizer.params.learning_rate}
+        warmup_steps: 4000
+
+transport:
+    path_type: "Linear"
+    prediction: "velocity"
+    loss_weight: null
+    train_eps: null
+    sample_eps: null
+    snr_type: "lognorm"
+    sampling_method: "euler"
+    guidance_scale: 3.0
+    num_inference_steps: 50
+    atol: 1e-6
+    rtol: 1e-3
+    reverse: False
+    do_shift: True
+    time_shifting_factor: 3.0
+
+# ==================== Token-Level LoRA (Paper: Modality-Routed LoRA) ====================
+# Stage 3 r32: LoRA-A/B enabled (text/image-token + motion-token paths).
+# Note: enable_B=true creates the motion-path LoRA-B; train_B=true trains it.
+lora:
+    enabled: true
+    rank_A: 32              # LoRA rank for the text/image-token path
+    rank_B: 32              # LoRA rank for the motion-token path (kept consistent with Stage 2b)
+    alpha: 32               # LoRA alpha
+    dropout: 0.0            # LoRA dropout
+    enable_A: true          # Stage 3: text/image-token path ON
+    enable_B: true          # Stage 3: motion-token path created (to load weights)
+    train_B: true           # Stage 3: motion-token path trained
+    learning_rate: 0.00006  # LoRA learning rate
+    target_modules:
+        - q_proj
+        - k_proj
+        - v_proj
+        - o_proj

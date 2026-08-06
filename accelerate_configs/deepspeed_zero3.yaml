@@ -1,0 +1,21 @@
+# Accelerate + DeepSpeed ZeRO-3 config (optional alternative for train_stage4.sh).
+# Adjust num_processes to your GPU count.
+compute_environment: LOCAL_MACHINE
+debug: false
+distributed_type: DEEPSPEED
+downcast_bf16: "no"
+machine_rank: 0
+main_training_function: main
+mixed_precision: bf16
+num_machines: 1
+num_processes: 6
+rdzv_backend: static
+same_network: true
+use_cpu: false
+
+deepspeed_config:
+  zero_stage: 3
+  offload_optimizer_device: none
+  offload_param_device: none
+  zero3_init_flag: false
+  zero3_save_16bit_model: false

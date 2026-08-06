@@ -1,0 +1,36 @@
+# Outputs / experiment artifacts
+/outputs/
+wandb/
+save_vis/
+experiments/
+results/
+infer_out/
+*.log
+
+# Data & external assets (downloaded / prepared locally, never committed)
+# Root-anchored so that in-repo directories such as cma_vae/data/ stay tracked.
+/data/
+/deps/
+/pretrained/
+Wan2.1_VAE.pth
+
+# Weights & large binaries
+*.pth
+*.ckpt
+*.pt
+*.bin
+*.safetensors
+*.tar
+*.tar.gz
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

@@ -1,0 +1,43 @@
+{
+    "Motion-Edit": {
+        "edit_instruction": {
+            "class": "m_edit",
+            "input": [
+                "Given the source motion <Source_Motion_Placeholder>, please modify it according to the following instruction: <Edit_Instruction_Placeholder>",
+                "Here is a motion sequence <Source_Motion_Placeholder>. Edit this motion based on the requirement: <Edit_Instruction_Placeholder>",
+                "I have a motion <Source_Motion_Placeholder> that needs to be modified. Please adjust it following this guidance: <Edit_Instruction_Placeholder>",
+                "Take the motion <Source_Motion_Placeholder> and transform it according to the edit instruction: <Edit_Instruction_Placeholder>",
+                "The original motion is <Source_Motion_Placeholder>. Please revise it to satisfy the following condition: <Edit_Instruction_Placeholder>",
+                "Based on the input motion <Source_Motion_Placeholder>, generate a new motion that incorporates this change: <Edit_Instruction_Placeholder>",
+                "Starting from the motion <Source_Motion_Placeholder>, apply the following modification: <Edit_Instruction_Placeholder>",
+                "Please edit the given motion <Source_Motion_Placeholder> by following this instruction: <Edit_Instruction_Placeholder>",
+                "Modify the motion sequence <Source_Motion_Placeholder> according to the specified requirement: <Edit_Instruction_Placeholder>",
+                "I want you to adjust the motion <Source_Motion_Placeholder> based on the following editing guidance: <Edit_Instruction_Placeholder>",
+                "Please generate an edited motion for <Source_Motion_Placeholder>. Edit request: <Edit_Instruction_Placeholder>",
+                "Can you revise <Source_Motion_Placeholder> so that it fulfills: <Edit_Instruction_Placeholder>?",
+                "Produce a modified version of <Source_Motion_Placeholder> that reflects the following instruction.  Input: <Edit_Instruction_Placeholder>",
+                "Develop an edited motion by applying <Edit_Instruction_Placeholder> to <Source_Motion_Placeholder>",
+                "Show me the updated motion after editing <Source_Motion_Placeholder> with the instruction \"<Edit_Instruction_Placeholder>\"",
+                "Please transform the given motion <Source_Motion_Placeholder> to match the edit description: <Edit_Instruction_Placeholder>",
+                "Create an alternative motion based on <Source_Motion_Placeholder> while making this change: <Edit_Instruction_Placeholder>",
+                "I want a revised version of <Source_Motion_Placeholder>. Follow this edit directive: <Edit_Instruction_Placeholder>",
+                "Generate a new motion that keeps the original intent of <Source_Motion_Placeholder> but applies: <Edit_Instruction_Placeholder>",
+                "Edit <Source_Motion_Placeholder> according to the instruction below and output the resulting motion: <Edit_Instruction_Placeholder>",
+                "Modify the following motion <Source_Motion_Placeholder> to satisfy the description: <Edit_Instruction_Placeholder>",
+                "Show me a modified version of <Source_Motion_Placeholder> that incorporates the instruction: <Edit_Instruction_Placeholder>",
+                "I need an edited version of <Source_Motion_Placeholder>. The edit instruction is: <Edit_Instruction_Placeholder>",
+                "Can you update the motion <Source_Motion_Placeholder> with the following change? Input: <Edit_Instruction_Placeholder>",
+                "Transform the motion <Source_Motion_Placeholder> based on the text description: <Edit_Instruction_Placeholder>",
+                "Please create a variation of <Source_Motion_Placeholder> that aligns with: <Edit_Instruction_Placeholder>",
+                "Given <Source_Motion_Placeholder>, generate a new sequence that follows the instruction: <Edit_Instruction_Placeholder>",
+                "Take <Source_Motion_Placeholder> as the base motion and modify it. Requirement: <Edit_Instruction_Placeholder>",
+                "Refine the motion <Source_Motion_Placeholder> using the following edit prompt: <Edit_Instruction_Placeholder>",
+                "Edit the motion <Source_Motion_Placeholder>. The specific instruction is: <Edit_Instruction_Placeholder>"
+            ],
+            "output": [
+                "<Motion_Placeholder>"
+            ]
+        }
+    }
+}
+

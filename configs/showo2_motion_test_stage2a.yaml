@@ -1,0 +1,239 @@
+# UniMotion Stage 2a Test Configuration (legacy entry)
+# Evaluates the three Stage 2a tasks (paper Stage 1b, first phase): T2M, M2T, Pred.
+# Stage 2a uses the fixed prompt template (instructions/template_pretrain.json).
+# 269-dim features, downsample_rate=4, LoRA-A+B both enabled.
+#
+# Evaluation protocol matches MotionGPT3 for a fair comparison.
+# NOTE: the unified evaluation entry is test_stage4.py with
+# configs/showo2_motion_test_stage4.yaml; this config is kept for evaluating
+# Stage 2a checkpoints with their training-time fixed prompts.
+#
+# Usage:
+#   # Test all tasks (M2T defaults to 3 repetitions, T2M/Pred to 1):
+#   CUDA_VISIBLE_DEVICES=0 python test_stage2.py config=configs/showo2_motion_test_stage2a.yaml
+#
+#   # Quick test (few samples, for sanity checking the code):
+#   CUDA_VISIBLE_DEVICES=0 python test_stage2.py config=configs/showo2_motion_test_stage2a.yaml \
+#       test.quick=True test.num_quick_samples=64
+#
+#   # Test specific tasks:
+#   python test_stage2.py config=configs/showo2_motion_test_stage2a.yaml test.tasks=[t2m]
+#   python test_stage2.py config=configs/showo2_motion_test_stage2a.yaml test.tasks=[m2t]
+#   python test_stage2.py config=configs/showo2_motion_test_stage2a.yaml test.tasks=[pred]
+#   python test_stage2.py config=configs/showo2_motion_test_stage2a.yaml test.tasks=[t2m,m2t]
+#
+#   # Multi-GPU:
+#   CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --nproc_per_node=4 test_stage2.py \
+#       config=configs/showo2_motion_test_stage2a.yaml
+#
+#   # Specific checkpoint:
+#   python test_stage2.py config=configs/showo2_motion_test_stage2a.yaml \
+#       test.model_path=/path/to/checkpoint
+
+wandb:
+  entity: null
+  resume: false
+
+experiment:
+    project: "unimotion"
+    name: "unimotion-stage2a-eval"
+    output_dir: "outputs/stage2a_eval"
+
+model:
+    weight_type: "bfloat16"
+
+    # Image/Video VAE (unchanged from Show-o2)
+    vae_model:
+        type: "wan21"
+        pretrained_model_path: "Wan2.1_VAE.pth"
+
+    # CMA Motion VAE (269-dim features, downsample_rate=4)
+    motion_vae:
+        pretrained_model_path: "pretrained/cma_vae.ckpt"
+        motion_latent_dim: 256
+        motion_nfeats: 269
+        downsample_rate: 4
+
+    # Show-o2 main model
+    showo:
+        model_name: "Showo2WithMotion"
+        load_from_showo: False
+        pretrained_model_path: "outputs/unimotion-stage2a/checkpoint-800000"
+        llm_model_path: "Qwen/Qwen2.5-1.5B-Instruct"
+        llm_vocab_size: null
+        hidden_size: 1536
+
+        # Image/video settings
+        image_latent_dim: 16
+        image_latent_height: 27
+        image_latent_width: 27
+        hq_image_latent_height: 64
+        hq_image_latent_width: 64
+        mixed_modal_latent_height: 27
+        mixed_modal_latent_width: 27
+        patch_size: 2
+        num_diffusion_layers: 10
+        clip_latent_dim: 1152
+        add_qk_norm: True
+        add_time_embeds: True
+        clip_pretrained_model_path: "google/siglip-so400m-patch14-384"
+
+        # Motion settings (269-dim features, downsample_rate=4)
+        motion_latent_dim: 256
+        motion_nfeats: 269
+        motion_downsample_rate: 4
+        max_motion_length: 500
+        num_motion_diffusion_layers: 6
+        # Dual-Path Motion Embedder settings
+        motion_semantic_dim: 512
+        num_motion_semantic_layers: 4
+        pose_branch:
+            enabled: false
+            ckpt_path: "deps/pose/tokenhmr_model.ckpt"
+            strict_ckpt: true
+            apply_tasks: ['img2pose']
+            freeze_backbone: true
+            run_with_no_grad: true
+            input_size: 256
+            crop_width: 192
+            feature_dim: 1280
+            target_tokens_hw: [27, 27]
+
+        frozen_params: null
+        params_not_load: null
+
+dataset:
+    motion:
+        # Unified 269-dim data (UNI_MOTION_269).
+        # GT motions are truncated to 263 dims for evaluator normalization.
+        data_root: "data/UNI_MOTION_269/HumanML3D"
+        latent_dir: null
+        max_motion_length: 196
+        min_motion_length: 40
+        unit_length: 1
+        fps: 20
+        downsample_rate: 4
+        motion_latent_dim: 256
+        predict_ratio: 0.2
+
+    params:
+        num_workers: 4
+        pin_memory: True
+
+    preprocessing:
+        max_seq_length: 512
+        max_motion_tokens: 49
+        max_text_len: 256
+        eval_max_text_len: 20   # max_text_len for evaluation (HumanML3D standard)
+
+# Test settings
+test:
+    # Stage 2a checkpoint path (final Stage 2a checkpoint of the released training chain)
+    model_path: "outputs/unimotion-stage2a/checkpoint-800000"
+
+    # Output directory
+    output_dir: "outputs/stage2a_eval"
+
+    # Tasks to test (options: t2m, m2t, pred)
+    tasks: ['t2m', 'm2t', 'pred']
+
+    # Stage 2a uses the fixed prompt template (aligned with training)
+    instruction_template_path: "instructions/template_pretrain.json"
+
+    # Common parameters
+    batch_size: 32
+    max_motion_length: 196
+    min_motion_length: 40
+    use_gt_length: True
+
+    # Quick test mode: randomly sample a few samples (fixed seed, reproducible)
+    quick: False
+    num_quick_samples: 64
+
+    # Number of evaluation repetitions (per task; quick mode forces all to 1).
+    # Leave the global replication_times unset unless you need a global override.
+    # replication_times: 20  # uncomment to override all tasks globally
+
+    # T2M task parameters
+    t2m:
+        replication_times: 1   # T2M defaults to 1 (generation is slow; 1 is usually enough)
+        guidance_scale: 5.0
+        num_inference_steps: 50
+
+    # M2T task parameters
+    m2t:
+        replication_times: 3  # M2T defaults to 3 (consistent with MotionGPT3; reported as mean +/- 95% CI)
+        max_new_tokens: 128
+        do_sample: False       # greedy decoding (consistent with MotionGPT3)
+        temperature: 1.0
+        top_k: 50
+
+    # Pred task parameters
+    pred:
+        replication_times: 1   # Pred defaults to 1
+        predict_ratio: 0.2
+        guidance_scale: 1.0
+        num_inference_steps: 50
+
+    # Evaluator paths
+    t2m_evaluator_path: "deps/t2m/t2m"
+    glove_dir: "deps/glove/glove"
+
+    # Mean/Std used for evaluation (263-dim, consistent with the T2M evaluator)
+    mean_eval_path: "deps/t2m/t2m/Comp_v6_KLD01/meta/mean.npy"
+    std_eval_path: "deps/t2m/t2m/Comp_v6_KLD01/meta/std.npy"
+
+    # Device and seed
+    device: "cuda"
+    seed: 42
+
+    save_vis:
+        enabled: false
+        root_dir: "outputs/save_vis"
+        save_all_replications: false
+
+# Transport settings (for generation)
+transport:
+    path_type: "Linear"
+    prediction: "velocity"
+    loss_weight: null
+    train_eps: null
+    sample_eps: null
+    snr_type: "lognorm"
+    sampling_method: "euler"
+    guidance_scale: 3.0
+    num_inference_steps: 50
+    atol: 1e-6
+    rtol: 1e-3
+    reverse: False
+    do_shift: True
+    time_shifting_factor: 3.0
+
+# Training settings are not used at test time; kept for compatibility
+training:
+    stage: "test"
+    gradient_accumulation_steps: 1
+    batch_size_t2m: 32
+    batch_size_m2t: 32
+    batch_size_pred: 32
+    mixed_precision: "bf16"
+    enable_tf32: True
+    seed: 42
+    max_train_steps: 0
+
+# ==================== Token-Level LoRA (Paper: Modality-Routed LoRA) ====================
+# Stage 2a: LoRA-A (text/image-token path) + LoRA-B (motion-token path) both enabled.
+# Must match the training configuration!
+lora:
+    enabled: true
+    rank_A: 32
+    rank_B: 32
+    alpha: 32
+    dropout: 0.0
+    enable_A: true   # Stage 2a: text/image-token path ON
+    enable_B: true   # Stage 2a: motion-token path ON
+    target_modules:
+        - q_proj
+        - k_proj
+        - v_proj
+        - o_proj

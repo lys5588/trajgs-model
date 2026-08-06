@@ -1,0 +1,57 @@
+# Default values shared by all experiment configs.
+SEED_VALUE: 1234
+DEBUG: False
+FULL_CONFIG: false
+
+TRAIN:
+  SPLIT: 'train'
+  NUM_WORKERS: 8
+  BATCH_SIZE: 32
+  END_EPOCH: 2000
+  RESUME: ''
+  PRETRAINED_VAE: ''
+  PRETRAINED: ''
+  OPTIM:
+    TYPE: 'AdamW'
+    LR: 1e-4
+
+EVAL:
+  SPLIT: 'test'
+  BATCH_SIZE: 32
+  NUM_WORKERS: 8
+
+TEST:
+  TEST_DIR: ''
+  CHECKPOINTS: ''
+  SPLIT: 'test'
+  BATCH_SIZE: 32
+  NUM_WORKERS: 8
+  SAVE_PREDICTIONS: False
+  COUNT_TIME: False
+  REPLICATION_TIMES: 1
+  REP_I: 0
+
+LOSS:
+  TYPE: 'mld'
+
+METRIC:
+  TYPE: []
+  FORCE_IN_METER: True
+  DIST_SYNC_ON_STEP: True
+
+DATASET:
+  NCLASSES: 10
+  SAMPLER:
+    MAX_SQE: -1
+    MAX_LEN: 200
+    MIN_LEN: 20
+
+LOGGER:
+  SAVE_CHECKPOINT_EPOCH: 200
+  LOG_EVERY_STEPS: 20
+  VAL_EVERY_STEPS: 200  # (unit: epochs) fed to Lightning's check_val_every_n_epoch
+  TENSORBOARD: True
+  WANDB:
+    OFFLINE: False
+    PROJECT: null
+    RESUME_ID: null

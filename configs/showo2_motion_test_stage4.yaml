@@ -1,0 +1,316 @@
+# UniMotion Unified Test Configuration (main evaluation entry)
+# Evaluates the released tasks: T2M / M2T / Pred / Edit.
+#   - T2M (all-captions paper protocol): test_t2m_allcaps.py
+#   - M2T / Pred / Edit:                 test_stage4.py
+# (img2pose / img2text / mgie evaluation is NOT included in this release; the
+#  corresponding sections below are kept only for config compatibility.)
+#
+# The task defaults below match our reference evaluation protocol:
+#   T2M:  guidance_scale=5.0, 50 Euler steps, latent_smooth_sigma=0.0,
+#         all-captions protocol, seed=42 (model: Stage 1a checkpoint)
+#   Pred: predict_ratio=0.2, 50 steps, latent_smooth_sigma=0.0
+#   Edit: guidance_scale=1.0, 50 steps, latent_smooth_sigma=0.0
+#   (model for M2T/Pred/Edit: Stage 1b checkpoint)
+#
+# Usage:
+#   # M2T / Pred / Edit with the default (Stage 2b) checkpoint:
+#   torchrun --nproc_per_node=N test_stage4.py config=configs/showo2_motion_test_stage4.yaml \
+#       test.tasks=[m2t,pred,edit]
+#   # T2M paper protocol (all captions) with the Stage 1 T2M checkpoint:
+#   torchrun --nproc_per_node=N test_t2m_allcaps.py config=configs/showo2_motion_test_stage4.yaml \
+#       test.model_path=outputs/unimotion-stage1/checkpoint-340000
+
+wandb:
+  entity: null
+  resume: false
+
+experiment:
+    project: "unimotion"
+    name: "unimotion-stage4-eval"
+    output_dir: "outputs/stage4_eval"
+
+model:
+    weight_type: "bfloat16"
+
+    vae_model:
+        type: "wan21"
+        pretrained_model_path: "Wan2.1_VAE.pth"
+
+    motion_vae:
+        pretrained_model_path: "pretrained/cma_vae.ckpt"
+        motion_latent_dim: 256
+        motion_nfeats: 269
+        downsample_rate: 4
+
+    showo:
+        model_name: "Showo2WithMotion"
+        load_from_showo: False
+        pretrained_model_path: "outputs/unimotion-stage2b/checkpoint-440000"
+        llm_model_path: "Qwen/Qwen2.5-1.5B-Instruct"
+        llm_vocab_size: null
+        hidden_size: 1536
+
+        image_latent_dim: 16
+        image_latent_height: 27
+        image_latent_width: 27
+        hq_image_latent_height: 64
+        hq_image_latent_width: 64
+        mixed_modal_latent_height: 27
+        mixed_modal_latent_width: 27
+        patch_size: 2
+        num_diffusion_layers: 10
+        clip_latent_dim: 1152
+        add_qk_norm: True
+        add_time_embeds: True
+        clip_pretrained_model_path: "google/siglip-so400m-patch14-384"
+
+        motion_latent_dim: 256
+        motion_nfeats: 269
+        motion_downsample_rate: 4
+        max_motion_length: 500
+        num_motion_diffusion_layers: 6
+        motion_semantic_dim: 512
+        num_motion_semantic_layers: 4
+        # TokenHMR pose branch: only needed for image-conditioned checkpoints
+        # (Stage 3/4). Disabled by default because the default checkpoint
+        # (Stage 2b) has no pose branch and image-task evaluation is not
+        # included in this release. Set enabled=true (and provide
+        # deps/pose/tokenhmr_model.ckpt) when loading Stage 3/4 checkpoints.
+        pose_branch:
+            enabled: false
+            ckpt_path: "deps/pose/tokenhmr_model.ckpt"
+            strict_ckpt: true
+            apply_tasks: ['img2pose', 'img2text', 'mgie']
+            freeze_backbone: true
+            run_with_no_grad: true
+            input_size: 256
+            crop_width: 192
+            feature_dim: 1280
+            target_tokens_hw: [27, 27]
+
+        frozen_params: null
+        params_not_load: null
+
+dataset:
+    motion:
+        data_root: "data/UNI_MOTION_269/HumanML3D"
+        latent_dir: null
+        max_motion_length: 196
+        min_motion_length: 40
+        unit_length: 1
+        fps: 20
+        downsample_rate: 4
+        motion_latent_dim: 256
+        predict_ratio: 0.2
+
+    motion_edit:
+        data_root: "data/UNI_MOTION_269/MotionFix"
+        instruction_template_path: "instructions/template_edit_instructions.json"
+
+    # H36M is only used by img2pose/img2text evaluation, which is not included
+    # in this release; kept for config compatibility.
+    h36m:
+        data_root: "data/UNI_MOTION_269/H36M"
+        image_root: "data/Human3.6M_MMPose/processed/images_fps50_cropped_448x448"
+        instruction_template_path: "instructions/img_template_instructions.json"
+
+    num_image_tokens: 729
+    image_resolution: 432
+
+    params:
+        num_workers: 4
+        pin_memory: True
+
+    preprocessing:
+        # Default 1024; the script switches profiles at runtime based on test.tasks
+        # (see test.auto_profile).
+        max_seq_length: 1024
+        max_motion_tokens: 49
+        max_text_len: 256
+        eval_max_text_len: 20
+
+test:
+    # Default checkpoint: the Stage 1b (stage2b) reference model for M2T / Pred /
+    # Edit. For the T2M protocol, override with the Stage 1a T2M checkpoint
+    # (see the usage block at the top of this file).
+    model_path: "outputs/unimotion-stage2b/checkpoint-440000"
+    output_dir: "outputs/stage4_eval"
+
+    # Released evaluation tasks. (t2t/img2pose/img2text/mgie exist in the code but
+    # their evaluation is not part of this release.)
+    tasks: ['t2m', 'm2t', 'pred', 'edit']
+
+    # Automatically switch evaluation profile by task set:
+    # - motion_only: motion tasks only (no img2pose/img2text/mgie) => max_seq_length=512
+    # - full_stage4: with image tasks => max_seq_length=1024
+    # batch sizes are scaled per profile (2x for motion_only).
+    # The reference runs above ran with the motion_only profile
+    # (batch_size 8->16, edit retrieval_batch_size 16->32 at runtime).
+    auto_profile:
+        enabled: true
+        image_tasks: ['img2pose', 'img2text', 'mgie']
+        motion_only:
+            max_seq_length: 512
+            batch_size_scale: 2.0
+        full_stage4:
+            max_seq_length: 1024
+            batch_size_scale: 1.0
+        mgie_only:
+            max_seq_length: 1536
+            batch_size_scale: 1.0
+
+    # Resume T2M generation from a previous save_vis directory (null = disabled)
+    resume_t2m_from_save_vis_dir: null
+    resume_t2m_replication: 0
+
+    t2m_prompt_template: "Generate motion: <Caption_Placeholder>"
+    m2t_prompt_template: "Generate text: <Motion_Placeholder>"
+    pred_prompt_template: "Predict motion: <Motion_Placeholder_s1>"
+    t2t_prompt_template: ""
+    img2text_prompt_template: "Generate description of the pose in the image: <Image_Placeholder>."
+    img2pose_prompt_template: "Generate pose of the image: <Image_Placeholder>."
+
+    batch_size: 8
+    max_motion_length: 196
+    min_motion_length: 40
+    use_gt_length: True
+
+    # Quick test mode: randomly sample a few samples (fixed seed, reproducible)
+    quick: False
+    num_quick_samples: 64
+    # replication_times: 5  # optional global override (or env var REP=)
+
+    # T2M protocol parameters (reference protocol: guidance 5.0, 50 Euler steps,
+    # latent smoothing disabled, all-captions expansion, single replication).
+    t2m:
+        replication_times: 1
+        guidance_scale: 5.0
+        num_inference_steps: 50
+        latent_smooth_sigma: 0.0   # temporal Gaussian smoothing in latent space; 0.0 = off (reference protocol)
+        use_all_captions: true     # true = evaluate every caption of each sample (paper protocol, allcaps entry); false = primary caption only
+
+    # M2T protocol parameters (rep=3, greedy decoding), consistent with MotionGPT3.
+    m2t:
+        replication_times: 3
+        max_new_tokens: 128
+        do_sample: False
+        temperature: 1.0
+        top_k: 50
+
+    # Pred protocol parameters (reference protocol: predict_ratio=0.2, 50 steps,
+    # latent smoothing disabled; CFG is disabled when guidance_scale <= 1.0).
+    pred:
+        replication_times: 1
+        predict_ratio: 0.2
+        guidance_scale: 1.0
+        num_inference_steps: 50
+        latent_smooth_sigma: 0.0   # temporal Gaussian smoothing in latent space; 0.0 = off (reference protocol)
+
+    t2t:
+        replication_times: 5
+        max_new_tokens: 80
+        do_sample: False
+        temperature: 1.0
+        top_k: 50
+
+    # Edit protocol parameters (MotionFix test split; reference protocol:
+    # guidance_scale=1.0, 50 steps, latent smoothing disabled). With the default
+    # motion_only auto profile, retrieval_batch_size 16 is scaled to 32 at runtime.
+    edit:
+        replication_times: 1
+        batch_size: 8
+        max_motion_length: 196
+        min_motion_length: 40
+        predict_ratio: 0.0
+        guidance_scale: 1.0
+        num_inference_steps: 50
+        retrieval_batch_size: 16
+        edit_retr_diversity_times: 300
+        latent_smooth_sigma: 0.0   # temporal Gaussian smoothing in latent space; 0.0 = off (reference protocol)
+
+    # img2pose/img2text evaluation is NOT included in this release; sections kept
+    # for config compatibility only.
+    img2pose:
+        replication_times: 1
+        batch_size: 8
+        max_samples: 2000
+        guidance_scale: 0.0
+        num_inference_steps: 50
+        save_alignment_vis: false
+        vis_gt_orientation_sweep: true
+
+    img2text:
+        replication_times: 5
+        batch_size: 16
+        max_samples: 2000
+        require_text: True
+        max_new_tokens: 80
+        do_sample: False
+        temperature: 1.0
+        top_k: 50
+
+    t2m_evaluator_path: "deps/t2m/t2m"
+    glove_dir: "deps/glove/glove"
+
+    mean_eval_path: "deps/t2m/t2m/Comp_v6_KLD01/meta/mean.npy"
+    std_eval_path: "deps/t2m/t2m/Comp_v6_KLD01/meta/std.npy"
+
+    device: "cuda"
+    seed: 42
+
+    save_vis:
+        enabled: false
+        root_dir: "outputs/save_vis"
+        save_all_replications: false
+        save_pred_source_motion: true
+        save_pred_gt_private: true
+        pred_source_task_name: "pred_source_public"
+        pred_gt_private_task_name: "pred_gt_private"
+        save_edit_source_motion: true
+        save_edit_target_private: true
+        edit_source_task_name: "edit_source_public"
+        edit_target_private_task_name: "edit_target_private"
+
+transport:
+    path_type: "Linear"
+    prediction: "velocity"
+    loss_weight: null
+    train_eps: null
+    sample_eps: null
+    snr_type: "lognorm"
+    sampling_method: "euler"
+    guidance_scale: 3.0
+    num_inference_steps: 50
+    atol: 1e-6
+    rtol: 1e-3
+    reverse: False
+    do_shift: True
+    time_shifting_factor: 3.0
+
+training:
+    stage: "test"
+    gradient_accumulation_steps: 1
+    batch_size_t2m: 8
+    batch_size_m2t: 8
+    batch_size_pred: 8
+    mixed_precision: "bf16"
+    enable_tf32: True
+    seed: 42
+    max_train_steps: 0
+
+# The unified test creates both LoRA branches (A/B) for compatibility with the
+# checkpoint's chained LoRA weights (Paper: Modality-Routed LoRA)
+lora:
+    enabled: true
+    rank_A: 32
+    rank_B: 32
+    alpha: 32
+    dropout: 0.0
+    enable_A: true
+    enable_B: true
+    train_B: false
+    target_modules:
+        - q_proj
+        - k_proj
+        - v_proj
+        - o_proj

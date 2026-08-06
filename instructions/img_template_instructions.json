@@ -1,0 +1,53 @@
+
+{
+    "Image-to-Pose": {
+        "image": {
+      "class": "img2pose",
+      "input": [
+        "Please estimate the SMPL pose of the person in the image <Image_Placeholder>.",
+        "Can you estimate the SMPL pose parameters from the image <Image_Placeholder> now?",
+        "What SMPL pose is shown in <Image_Placeholder>? Please return the pose parameters.",
+        "Describe the body configuration in <Image_Placeholder> using SMPL pose parameters for this person.",
+        "Provide the SMPL pose representation for the individual shown in image <Image_Placeholder>.",
+        "Please analyze <Image_Placeholder> and output the person's SMPL pose parameters in detail.",
+        "What pose does the person in <Image_Placeholder> have? Return the SMPL parameters.",
+        "Generate SMPL pose parameters for the subject visible in image <Image_Placeholder> now.",
+        "Please infer the SMPL pose of the figure shown in image <Image_Placeholder>.",
+        "Could you provide the SMPL pose details for the person in <Image_Placeholder>?",
+        "Look at <Image_Placeholder> and report the subject's SMPL pose parameters in detail.",
+        "Extract the SMPL pose from <Image_Placeholder> and return the pose tokens now.",
+        "Please return the SMPL body pose corresponding to image <Image_Placeholder> for decoding.",
+        "What is the subject's SMPL pose in <Image_Placeholder>? Return pose parameters now.",
+        "Use <Image_Placeholder> to predict the person's SMPL pose parameters for this frame."
+      ],
+      "output": [
+        "<Pose_Placeholder>"
+      ]
+        }
+    },
+    "Image-to-Text": {
+        "image": {
+      "class": "img2text",
+      "input": [
+        "Please describe the person's pose shown in <Image_Placeholder> in plain English.",
+        "Describe the posture visible in <Image_Placeholder> using clear natural language.",
+        "Describe the body pose of the subject in <Image_Placeholder> concisely.",
+        "Give a brief text description of the pose in <Image_Placeholder>.",
+        "Please summarize the posture shown in <Image_Placeholder> with concise wording.",
+        "Provide a short description of the person's pose in <Image_Placeholder>.",
+        "Provide a natural-language description of the pose in <Image_Placeholder>.",
+        "Describe the stance and body configuration visible in <Image_Placeholder>.",
+        "Please explain the subject's posture in <Image_Placeholder> using plain English.",
+        "What kind of pose appears in <Image_Placeholder>? Provide a short description.",
+        "Use text to describe the person's pose in <Image_Placeholder>.",
+        "Please provide a concise caption of the pose shown in <Image_Placeholder>.",
+        "Describe the posture demonstrated in <Image_Placeholder> in clear, simple words.",
+        "What body position is shown in <Image_Placeholder>? Describe it briefly.",
+        "Generate a textual description for the human pose in <Image_Placeholder>."
+      ],
+      "output": [
+        "<Caption_Placeholder>"
+      ]
+        }
+    }
+}

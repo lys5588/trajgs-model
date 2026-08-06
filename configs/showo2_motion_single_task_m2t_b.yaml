@@ -1,0 +1,166 @@
+# UniMotion Training Configuration - Stage X M2T (b) (LoRA rank=32)
+# Single-task Motion-to-Text variant, phase (b): continues from the Stage X M2T (a)
+# checkpoint (outputs/unimotion-single-task-m2t-a/checkpoint-80000) with a mixed
+# fixed+diverse M2T instruction template; pure NTP text loss (flow_coeff=0).
+wandb:
+  entity: null
+  resume: auto
+experiment:
+  project: unimotion
+  name: unimotion-single-task-m2t-b
+  output_dir: outputs/unimotion-single-task-m2t-b
+  save_every: 20000
+  generate_every: 20000
+  log_every: 50
+  log_grad_norm_every: 1000
+  resume_from_checkpoint: latest
+  checkpoints_total_limit: 20
+model:
+  weight_type: bfloat16
+  vae_model:
+    type: wan21
+    pretrained_model_path: Wan2.1_VAE.pth
+  motion_vae:
+    pretrained_model_path: pretrained/cma_vae.ckpt
+    motion_latent_dim: 256
+    motion_nfeats: 269
+    downsample_rate: 4
+  showo:
+    model_name: Showo2WithMotion
+    load_from_showo: false
+    embedding_train_policy: disabled
+    pretrained_model_path: outputs/unimotion-single-task-m2t-a/checkpoint-80000
+    llm_model_path: Qwen/Qwen2.5-1.5B-Instruct
+    llm_vocab_size: null
+    hidden_size: 1536
+    image_latent_dim: 16
+    image_latent_height: 27
+    image_latent_width: 27
+    hq_image_latent_height: 64
+    hq_image_latent_width: 64
+    mixed_modal_latent_height: 27
+    mixed_modal_latent_width: 27
+    patch_size: 2
+    num_diffusion_layers: 10
+    clip_latent_dim: 1152
+    add_qk_norm: true
+    add_time_embeds: true
+    clip_pretrained_model_path: google/siglip-so400m-patch14-384
+    motion_latent_dim: 256
+    motion_nfeats: 269
+    motion_downsample_rate: 4
+    max_motion_length: 500
+    num_motion_diffusion_layers: 6
+    motion_semantic_dim: 512
+    num_motion_semantic_layers: 4
+    frozen_params:
+    - showo
+    - und_trans
+    - position_embedding
+    - image_embedder_gen
+    - diffusion_head_a
+    - diffusion_head_b
+    params_not_load: null
+  gradient_checkpointing: true
+dataset:
+  tasks:
+  - m2t
+  num_image_tokens: 729
+  image_resolution: 432
+  motion:
+    data_root: data/UNI_MOTION_269/HumanML3D
+    latent_dir: null
+    max_motion_length: 200
+    min_motion_length: 20
+    unit_length: 1
+    fps: 20
+    downsample_rate: 4
+    motion_latent_dim: 256
+    predict_ratio: 0.2
+    disable_random_crop_for_m2t: true
+  motion_edit:
+    data_root: data/UNI_MOTION_269/MotionFix
+    instruction_template_path: instructions/template_edit_instructions.json
+  params:
+    num_workers: 4
+    pin_memory: true
+    persistent_workers: true
+  preprocessing:
+    max_seq_length: 512
+    max_motion_tokens: 50
+    max_text_len: 256
+training:
+  stage: lm_instruct
+  instruction_type: m2t
+  instruction_template_path: instructions/template_m2t_mix.json
+  gradient_accumulation_steps: 8
+  batch_size_t2m: 0
+  batch_size_m2t: 2
+  batch_size_pred: 0
+  batch_size_t2t: 0
+  batch_size_edit: 0
+  mixed_precision: bf16
+  enable_tf32: true
+  seed: 42
+  max_train_steps: 100000
+  cond_dropout_prob: 0.0
+  label_smoothing: 0.0
+  max_grad_norm: 1.0
+  ntp_coeff: 1.0
+  flow_coeff: 0.0
+  und_max_t0: 1.0
+  t2m_ratio: 0.0
+  m2t_ratio: 1.0
+  pred_ratio: 0.0
+  edit_ratio: 0.0
+  t2t_ratio: 0.0
+  batch_size_img2pose: 0
+  batch_size_img2text: 0
+  batch_size_mgie: 0
+  img2pose_ratio: 0.0
+  img2text_ratio: 0.0
+  mgie_ratio: 0.0
+optimizer:
+  name: adamw
+  params:
+    learning_rate: 2.0e-05
+    scale_lr: false
+    beta1: 0.9
+    beta2: 0.999
+    weight_decay: 0.0
+    epsilon: 1.0e-08
+lr_scheduler:
+  scheduler: constant_with_warmup
+  params:
+    learning_rate: ${optimizer.params.learning_rate}
+    warmup_steps: 1000
+transport:
+  path_type: Linear
+  prediction: velocity
+  loss_weight: null
+  train_eps: null
+  sample_eps: null
+  snr_type: lognorm
+  sampling_method: euler
+  guidance_scale: 3.0
+  num_inference_steps: 50
+  atol: 1.0e-06
+  rtol: 0.001
+  reverse: false
+  do_shift: true
+  time_shifting_factor: 3.0
+lora:
+  enabled: true
+  rank_A: 32
+  rank_B: 32
+  alpha: 32
+  dropout: 0.0
+  enable_A: true
+  enable_B: true
+  train_B: true
+  learning_rate: 2.0e-05
+  target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj

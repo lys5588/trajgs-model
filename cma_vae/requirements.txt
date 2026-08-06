@@ -1,0 +1,13 @@
+# Note: the code imports `lightning.pytorch` first and falls back to `pytorch_lightning`,
+# so either package works — including the main repo's pinned env (lightning==2.4.0 + pytorch-lightning==1.9.0).
+torch>=2.0
+lightning>=2.0  # or pytorch-lightning>=2.0 (both import paths supported)
+torchmetrics
+omegaconf
+numpy
+opencv-python
+rich
+psutil
+tensorboard
+scipy
+easydict  # HRNet config objects (image-guided training only)
