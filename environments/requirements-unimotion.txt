@@ -1,0 +1,8 @@
+# Official UniMotion pins, plus the CMA-VAE training dependencies.
+-r ../requirements.txt
+rich==13.9.4
+psutil==6.1.1
+tensorboard==2.19.0
+easydict==1.13
+# datasets 2.9 (required by nlg-metricverse) needs PyExtensionType.
+pyarrow==16.1.0

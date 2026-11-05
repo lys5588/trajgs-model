@@ -34,3 +34,10 @@ __pycache__/
 .DS_Store
 .vscode/
 .idea/
+
+# Local Conda, package caches and credentials
+/.local/
+/.cache/
+.env
+.env.*
+!.env.example

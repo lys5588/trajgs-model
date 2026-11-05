@@ -1,0 +1,55 @@
+# TrajGS development environment: Python 3.12, torch 2.15.0+cu132.
+# Derived from upstream requirements.txt; see docs/bootstrap.md for deviations.
+# Install torch/torchvision from the CUDA 13.2 index before this file.
+
+# Core
+torch==2.15.0
+torchvision==0.29.1
+transformers==4.47.0
+accelerate==1.15.0
+deepspeed==0.19.9
+diffusers==0.31.0
+omegaconf==2.3.0
+numpy==1.26.4
+einops==0.8.0
+timm==1.0.12
+safetensors==0.4.5
+huggingface-hub==0.24.0
+sentencepiece==0.2.0
+tokenizers==0.21.0
+
+# Motion VAE checkpoint loading (Lightning-format checkpoints)
+lightning==2.4.0
+pytorch-lightning==1.9.0
+
+# Data / video
+decord==0.6.0
+pillow==10.2.0
+opencv-python==4.8.0.74
+scipy==1.15.3
+pandas==2.2.2
+joblib==1.5.2
+
+# Evaluation
+torchmetrics==1.8.2
+torchdiffeq==0.2.5
+spacy==3.8.11
+bert-score==0.3.13
+nlg-metricverse==0.9.9
+
+# Logging / misc
+wandb==0.16.6
+tqdm==4.66.4
+matplotlib==3.9.4
+imageio==2.37.2
+imageio-ffmpeg==0.6.0
+
+# After installing spacy: python -m spacy download en_core_web_sm
+
+# CMA-VAE training dependencies
+rich==13.9.4
+psutil==6.1.1
+tensorboard==2.19.0
+easydict==1.13
+# datasets 2.9 (required by nlg-metricverse) needs PyExtensionType.
+pyarrow==16.1.0

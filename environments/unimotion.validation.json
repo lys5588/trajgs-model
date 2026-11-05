@@ -1,0 +1,23 @@
+{
+  "python": "3.10.22",
+  "torch": "2.5.1+cu124",
+  "torchvision": "0.20.1+cu124",
+  "cuda_runtime": "12.4",
+  "torchvision_ops": "passed",
+  "numpy": "1.26.4",
+  "transformers": "4.47.0",
+  "accelerate": "0.23.0",
+  "deepspeed": "0.15.3",
+  "diffusers": "0.31.0",
+  "lightning": "2.4.0",
+  "pytorch_lightning": "1.9.0",
+  "spacy": "3.8.11",
+  "decord": "0.6.0",
+  "cv2": "4.8.0",
+  "video_decode": "passed",
+  "nlg_imports": "passed",
+  "cma_vae_forward": "passed",
+  "spacy_model": "en_core_web_sm",
+  "cuda_smoke": "passed",
+  "gpu": "NVIDIA L40S"
+}

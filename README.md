@@ -1,3 +1,19 @@
+# TrajGS
+
+基于 [UniMotion](https://github.com/wangzy01/UniMotion) 初始化的研究框架。
+默认开发环境为 **`trajgs`（Python 3.12 / PyTorch 2.15 / CUDA 13.2）**；
+另保留 **`unimotion`** 环境用于复现上游标准配置。
+
+仓库来源、环境激活、重建与验收方法见 [初始化说明](docs/bootstrap.md)。
+
+```bash
+source scripts/activate_env.sh  # 默认 trajgs
+```
+
+以下保留上游项目说明。
+
+---
+
 # UniMotion
 
 **UniMotion: A Unified Framework for Motion-Text-Vision Understanding and Generation**
