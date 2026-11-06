@@ -1,0 +1,73 @@
+{
+  "scope": "Static source analysis only; no model code changes or forward runs.",
+  "repositories": {
+    "Unimotion": "a3769e9c1acbd28c9a5ce1761cecc778c7863fc6",
+    "Depth-Anything-3": "3d835ec1a5802d64a8b8b15f817a1ab54809bfe4"
+  },
+  "files": [
+    {
+      "path": "cma_vae/models/architectures/mld_vae_kl_align.py",
+      "sha256": "f56f0b7e659ae2adb4eae1e5f3cf7d3ebdc7b03b53cc177c22d7dccbf109317d"
+    },
+    {
+      "path": "cma_vae/models/operator/cross_attention.py",
+      "sha256": "179b2f043871f54ad66965154c71f9aa3384366b4a90fe58326875ed21fdfb3e"
+    },
+    {
+      "path": "cma_vae/models/operator/position_encoding.py",
+      "sha256": "914306fefb39cb05d3c0f7bb397e2a5a8dcd55daf681b47a37201ed1a748726b"
+    },
+    {
+      "path": "cma_vae/models/modeltype/mld_kl_align.py",
+      "sha256": "a8d0840d0bfea2de1ef633cc57ed202f0e52bb4235d46f54e6005c1406242a4c"
+    },
+    {
+      "path": "cma_vae/configs/config_cma_vae.yaml",
+      "sha256": "2b2d342048d0e6cb75096dfbf3a38f2d5ec0eb3393af592c2bc98e69da936dc6"
+    },
+    {
+      "path": "submodules/Depth-Anything-3/src/depth_anything_3/model/cam_enc.py",
+      "sha256": "3831baa5d661d9693222d209f5908279a350c7711d03c0daf50f7d1aac9b59a2"
+    },
+    {
+      "path": "submodules/Depth-Anything-3/src/depth_anything_3/model/utils/transform.py",
+      "sha256": "98d5c499f40e6e3e63cdaf0e269b8eeeb998ed125bcd63da41e2dec9ad32b8b9"
+    },
+    {
+      "path": "submodules/Depth-Anything-3/src/depth_anything_3/model/utils/block.py",
+      "sha256": "b0ec438942816169a5215a3678b4bff72b3783472e35942337b4a1142555c57b"
+    },
+    {
+      "path": "submodules/Depth-Anything-3/src/depth_anything_3/model/utils/attention.py",
+      "sha256": "8e8a3dd3aca75ce403bc1a2f7a0b2086cc516b221fcc394b888ebc5ddc9a8a33"
+    },
+    {
+      "path": "submodules/Depth-Anything-3/src/depth_anything_3/model/da3.py",
+      "sha256": "c7d5f88962e05c021cf7dab505840c8892e5e9d6880fb2901d20f4120ca173b3"
+    },
+    {
+      "path": "submodules/Depth-Anything-3/src/depth_anything_3/model/dinov2/vision_transformer.py",
+      "sha256": "c28650e5db0b578745f5a41336709d54d08f952bc08cf1bd2009e2b765111221"
+    },
+    {
+      "path": "submodules/Depth-Anything-3/src/depth_anything_3/api.py",
+      "sha256": "042ae8f6bfd1e5610100a585ebb00f8cbc3320f9aa9e03a07530fd4deda8d2d8"
+    },
+    {
+      "path": "submodules/Depth-Anything-3/src/depth_anything_3/configs/da3-small.yaml",
+      "sha256": "94f69159d682b897dd95ca6d2787148159782c2bcd3112a87e6fab037d7744ed"
+    },
+    {
+      "path": "submodules/Depth-Anything-3/src/depth_anything_3/configs/da3-base.yaml",
+      "sha256": "930542dc5e3340d0125d1ec0c5e9fbdb0e37c638542e438a80216eafb7a28d26"
+    },
+    {
+      "path": "submodules/Depth-Anything-3/src/depth_anything_3/configs/da3-large.yaml",
+      "sha256": "16da10fad86488c2627db6346eb4a11acc02fe489c9f00c59c8d3fa64891cc85"
+    },
+    {
+      "path": "submodules/Depth-Anything-3/src/depth_anything_3/configs/da3-giant.yaml",
+      "sha256": "05bdb8f591395f31aaa159e81825519d15e2323ecb6495e07a3a3a4b38673b31"
+    }
+  ]
+}

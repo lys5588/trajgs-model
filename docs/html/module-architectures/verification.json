@@ -1,0 +1,116 @@
+{
+  "scope": "HTML documentation only; no neural-network forward execution",
+  "viewports": [
+    {
+      "page": "index",
+      "viewport": "desktop",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "panels": 5,
+      "headings": [
+        "本次新增的两个模块",
+        "两条网络的核心计算路径",
+        "直接对比",
+        "下一步已经确定的接口",
+        "图册维护与来源"
+      ],
+      "page_errors": [],
+      "diagram_expand_close": "pass"
+    },
+    {
+      "page": "index",
+      "viewport": "mobile",
+      "width": 390,
+      "scrollWidth": 390,
+      "panels": 5,
+      "headings": [
+        "本次新增的两个模块",
+        "两条网络的核心计算路径",
+        "直接对比",
+        "下一步已经确定的接口",
+        "图册维护与来源"
+      ],
+      "page_errors": [],
+      "diagram_expand_close": "pass"
+    },
+    {
+      "page": "motion-encoder",
+      "viewport": "desktop",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "panels": 8,
+      "headings": [
+        "分析范围与默认配置",
+        "完整 forward 与张量形状",
+        "时间前端：下采样发生在哪里",
+        "SkipTransformer：9 层与四条长跳连",
+        "单个 EncoderLayer：Post-LN",
+        "位置、mask 与序列顺序",
+        "后验头与重参数化采样",
+        "对 20×11D 相机输入意味着什么"
+      ],
+      "page_errors": [],
+      "diagram_expand_close": "pass"
+    },
+    {
+      "page": "motion-encoder",
+      "viewport": "mobile",
+      "width": 390,
+      "scrollWidth": 390,
+      "panels": 8,
+      "headings": [
+        "分析范围与默认配置",
+        "完整 forward 与张量形状",
+        "时间前端：下采样发生在哪里",
+        "SkipTransformer：9 层与四条长跳连",
+        "单个 EncoderLayer：Post-LN",
+        "位置、mask 与序列顺序",
+        "后验头与重参数化采样",
+        "对 20×11D 相机输入意味着什么"
+      ],
+      "page_errors": [],
+      "diagram_expand_close": "pass"
+    },
+    {
+      "page": "da3-camera-encoder",
+      "viewport": "desktop",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "panels": 8,
+      "headings": [
+        "模块职责与分析边界",
+        "9D 参数如何构造",
+        "完整网络与尺寸",
+        "单个 Block：Pre-LN 与 LayerScale",
+        "它如何处理视图顺序",
+        "条件 token 在 DA3 中如何使用",
+        "对我们相机编码方案的参考价值",
+        "源码证据与复核入口"
+      ],
+      "page_errors": [],
+      "diagram_expand_close": "pass"
+    },
+    {
+      "page": "da3-camera-encoder",
+      "viewport": "mobile",
+      "width": 390,
+      "scrollWidth": 390,
+      "panels": 8,
+      "headings": [
+        "模块职责与分析边界",
+        "9D 参数如何构造",
+        "完整网络与尺寸",
+        "单个 Block：Pre-LN 与 LayerScale",
+        "它如何处理视图顺序",
+        "条件 token 在 DA3 中如何使用",
+        "对我们相机编码方案的参考价值",
+        "源码证据与复核入口"
+      ],
+      "page_errors": [],
+      "diagram_expand_close": "pass"
+    }
+  ],
+  "local_links": "pass",
+  "imported_cma_files_unchanged": 54,
+  "source_snapshots_unchanged": true
+}
