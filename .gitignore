@@ -1,0 +1,31 @@
+# Local environments, caches, and credentials.
+/.local
+/.cache/
+.venv/
+.env
+.env.*
+!.env.example
+
+# Python and editor artifacts.
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.DS_Store
+.vscode/
+.idea/
+
+# Data, model weights, and experiment outputs.
+/data/
+/deps/
+/pretrained/
+/outputs/
+wandb/
+experiments/
+results/
+infer_out/
+*.log
+*.pth
+*.pt
+*.ckpt
+*.safetensors

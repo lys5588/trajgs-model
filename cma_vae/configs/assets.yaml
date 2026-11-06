@@ -1,0 +1,4 @@
+FOLDER: './experiments'  # experiment output path (created under cma_vae/)
+
+TEST:
+  FOLDER: './results'  # test output path

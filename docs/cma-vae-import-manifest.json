@@ -1,0 +1,231 @@
+{
+  "source": "submodules/Unimotion/cma_vae",
+  "source_repository": "https://github.com/wangzy01/UniMotion",
+  "source_checkout_commit": "a3769e9c1acbd28c9a5ce1761cecc778c7863fc6",
+  "source_subtree_clean": true,
+  "destination": "cma_vae",
+  "copied_file_count": 54,
+  "files": [
+    {
+      "path": "cma_vae/README.md",
+      "sha256": "689bc74125aa38040421675b81068b30e58a9aaa608606d68beaedb65c7a6d64"
+    },
+    {
+      "path": "cma_vae/__init__.py",
+      "sha256": "07ad69881b6be15608c9d7e903646854d1d2564d6fd81db7a44f2af051627570"
+    },
+    {
+      "path": "cma_vae/callback/__init__.py",
+      "sha256": "59cbb581316b2c238f73d661c51702f210ce14a23b000160a1aa9685118d5193"
+    },
+    {
+      "path": "cma_vae/callback/progress.py",
+      "sha256": "6edebda96bc615e9b755e02efffc01809ff597a33a75b4217eec52348a74a391"
+    },
+    {
+      "path": "cma_vae/config.py",
+      "sha256": "a0cafbe6b1ce5d15f2b07113b5c95f61eb4d368d129f5b96661904883f221244"
+    },
+    {
+      "path": "cma_vae/configs/assets.yaml",
+      "sha256": "000a178dd5cf32feccca4a4fd107ba843d3ac82a75c1462f3a0803c4c825fb8d"
+    },
+    {
+      "path": "cma_vae/configs/base.yaml",
+      "sha256": "bf84a96d375b4b18751f82db88c6edb7741c46e828b0696f508f0d4838f9ac43"
+    },
+    {
+      "path": "cma_vae/configs/config_cma_vae.yaml",
+      "sha256": "2b2d342048d0e6cb75096dfbf3a38f2d5ec0eb3393af592c2bc98e69da936dc6"
+    },
+    {
+      "path": "cma_vae/data/UniMotion.py",
+      "sha256": "f7d80ba3ae33b1d3dfd3bc06d4530ba937781ac43f6f48b4ac02592dc6938b3a"
+    },
+    {
+      "path": "cma_vae/data/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cma_vae/data/base.py",
+      "sha256": "e2f1cc7fa0c9f5d06d00ed29552147fb68c0481434082a8831a084e4540142b9"
+    },
+    {
+      "path": "cma_vae/data/get_data.py",
+      "sha256": "a01b8cc09f1b89d82c68c9ac5cb701182c268857babb8778f80d47f0fa949b00"
+    },
+    {
+      "path": "cma_vae/data/humanml/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cma_vae/data/humanml/common/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cma_vae/data/humanml/common/quaternion.py",
+      "sha256": "17e96bb3af31952183453d4dc15f11f88bb940342f532f3860012aeecf1f85ad"
+    },
+    {
+      "path": "cma_vae/data/humanml/common/skeleton.py",
+      "sha256": "bcee4778048295eced2cb0e071c9ff790fa9b78522f7a035a948e007c440c946"
+    },
+    {
+      "path": "cma_vae/data/humanml/scripts/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cma_vae/data/humanml/scripts/motion_process.py",
+      "sha256": "0dedc5ab51f9770a39afc3b966fb9a2c94d8694d2a2ced1cf8b91ea90083c1c5"
+    },
+    {
+      "path": "cma_vae/data/humanml/utils/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cma_vae/data/humanml/utils/paramUtil.py",
+      "sha256": "fe0265f3dcd0d466690d816eae973fcece145f64551cef7e46fed7ef3de80d34"
+    },
+    {
+      "path": "cma_vae/data/humanml/utils/word_vectorizer.py",
+      "sha256": "0c6a35f97ac947c2cb570e0ec32ab285e8e03e04c4b62cedfe79c77c166c1534"
+    },
+    {
+      "path": "cma_vae/data/unimotion/__init__.py",
+      "sha256": "44f9df421d32c2ab46a5e355fd95c2bf6433f0c4d0054f2b2c57565f7ce5be4c"
+    },
+    {
+      "path": "cma_vae/data/unimotion/dataset.py",
+      "sha256": "4d47c8033a0f1c2cc6792272dbc9b7933299f8647099f76dd270871ae9513c5e"
+    },
+    {
+      "path": "cma_vae/data/unimotion/dataset_with_image.py",
+      "sha256": "fcbdd38c5a22d2e788e5ff070866b3cc415e475cfa03db8842150e993b699e76"
+    },
+    {
+      "path": "cma_vae/data/utils.py",
+      "sha256": "02d4bd991b9b932f58191a9942bdd81266c99dde08789e42ea3f697cc04a7a76"
+    },
+    {
+      "path": "cma_vae/inference.py",
+      "sha256": "2b82cad172560703080ff91f6408b39f0c58f53976d60ab3e728f069907820ba"
+    },
+    {
+      "path": "cma_vae/models/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cma_vae/models/architectures/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cma_vae/models/architectures/hrnet_wrapper.py",
+      "sha256": "e2632b9c87df05fd83b3062731e59f2430ecc8d877bff693edbb413f9d7af738"
+    },
+    {
+      "path": "cma_vae/models/architectures/mld_vae_kl_align.py",
+      "sha256": "f56f0b7e659ae2adb4eae1e5f3cf7d3ebdc7b03b53cc177c22d7dccbf109317d"
+    },
+    {
+      "path": "cma_vae/models/architectures/pose_hrnet.py",
+      "sha256": "e91b17b76de49ac0934ea75dc21d8f8d3f80d99b0dcc967cf0feea61bc1e4154"
+    },
+    {
+      "path": "cma_vae/models/architectures/tools/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cma_vae/models/architectures/tools/embeddings.py",
+      "sha256": "ed00f45854fdb1b3a40e921e01bf8bf8a277f1bb865b96073c6781c018ce893a"
+    },
+    {
+      "path": "cma_vae/models/architectures/tools/transformer_layers.py",
+      "sha256": "1a26eabdea5bf053a8a4516a4e299578157efaeb2a66591e636f710eff2c4c2f"
+    },
+    {
+      "path": "cma_vae/models/architectures/vision_utils.py",
+      "sha256": "1640f6efb92a02d37602e787247b69ecb7b6d0d34b25b86a9ff7ba2089321327"
+    },
+    {
+      "path": "cma_vae/models/get_model.py",
+      "sha256": "9d33bc875e90655362df5c1ba71682263fdf56a297dc15c2044b5d279b402da3"
+    },
+    {
+      "path": "cma_vae/models/losses/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cma_vae/models/losses/kl.py",
+      "sha256": "f2e8d29e52df784fc3e095bfc849727b44057cb3f763bcc57dd066f3908caf1f"
+    },
+    {
+      "path": "cma_vae/models/losses/mld_kl_align.py",
+      "sha256": "4b62c8d86f35917d38e86ee1be60c99aedfaea2b563a98ee114f515402d3ec41"
+    },
+    {
+      "path": "cma_vae/models/modeltype/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cma_vae/models/modeltype/mld_kl_align.py",
+      "sha256": "a8d0840d0bfea2de1ef633cc57ed202f0e52bb4235d46f54e6005c1406242a4c"
+    },
+    {
+      "path": "cma_vae/models/operator/__init__.py",
+      "sha256": "d5d517bc233a1c243330fd46af85e230b365235635e1f60876ca964cbca766dc"
+    },
+    {
+      "path": "cma_vae/models/operator/adain.py",
+      "sha256": "3f7c3a64a877c2c978b400f66eac1d60b769c68d0f611318bf305558f88e2de4"
+    },
+    {
+      "path": "cma_vae/models/operator/blocks.py",
+      "sha256": "b3c352a1d9e013f5aa00c63f5a53fd0be57adf2061e9e0f223448edb67a8b0c1"
+    },
+    {
+      "path": "cma_vae/models/operator/conv2d_gradfix.py",
+      "sha256": "1f140a5ce7b55a638982aed36dc8b699ed246fceb55cafa2d3f0647c1096b47c"
+    },
+    {
+      "path": "cma_vae/models/operator/cross_attention.py",
+      "sha256": "179b2f043871f54ad66965154c71f9aa3384366b4a90fe58326875ed21fdfb3e"
+    },
+    {
+      "path": "cma_vae/models/operator/position_encoding.py",
+      "sha256": "914306fefb39cb05d3c0f7bb397e2a5a8dcd55daf681b47a37201ed1a748726b"
+    },
+    {
+      "path": "cma_vae/models/operator/position_encoding_layer.py",
+      "sha256": "c0516d4da7f20cda5bfe25edfdb3887a61f8c2296f4eeba0cb9b8cc26b860b5c"
+    },
+    {
+      "path": "cma_vae/models/operator/self_attention.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cma_vae/requirements.txt",
+      "sha256": "c16c719746e58694c73acb0780a5e01ca19211c200a92a3dc5451811f99b8d4c"
+    },
+    {
+      "path": "cma_vae/train.py",
+      "sha256": "781aeb61f2e032b126827e48c4fb38c5ee592a19e1d61382bd3298554a5a9b2c"
+    },
+    {
+      "path": "cma_vae/utils/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cma_vae/utils/logger.py",
+      "sha256": "14cc6313d5681f6fe9233269fc6b55e7b43c62dbc8225acf008d8c05532c5c9a"
+    },
+    {
+      "path": "cma_vae/utils/temos_utils.py",
+      "sha256": "fea9a8aff21d979a8a0468d2c9a52923c96662bb7e71dc7be9491c7c47bc3256"
+    }
+  ],
+  "additional_license": {
+    "source": "submodules/Unimotion/LICENSE",
+    "destination": "cma_vae/LICENSE",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  }
+}

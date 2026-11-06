@@ -1,0 +1,126 @@
+# CMA-VAE (Cross-Modal Aligned Motion VAE) training config.
+# Run from the cma_vae/ directory: paths below are relative to cma_vae/,
+# so the main repository's data/ and deps/ trees are reached via `../`.
+NAME: cma_vae_down4_unimotion  # experiment name
+DEBUG: False
+ACCELERATOR: 'gpu'
+DEVICE: [0, 1, 2, 3]
+
+TRAIN:
+  STAGE: vae
+  ABLATION:
+    SKIP_CONNECT: True
+    PE_TYPE: mld
+    DIFF_PE_TYPE: mld
+    MLP_DIST: True
+    VAE_TYPE: kl_align
+  DATASETS: ['unimotion']  # joint training on HumanML3D + MotionFix + H36M
+  NUM_WORKERS: 4
+  BATCH_SIZE: 128
+  START_EPOCH: 0
+  END_EPOCH: 2800
+  RESUME: ''  # experiment folder to resume training from
+  PRETRAINED_VAE: ''  # checkpoint to initialize the VAE weights from
+  SPLIT: train
+  OPTIM:
+    TYPE: AdamW
+    LR: 1e-4
+
+EVAL:
+  DATASETS: ['unimotion']
+  BATCH_SIZE: 32
+  SPLIT: test
+  NUM_WORKERS: 8
+
+TEST:
+  CHECKPOINTS: ''
+  DATASETS: ['unimotion']
+  SPLIT: test
+  BATCH_SIZE: 32
+  MEAN: False
+  NUM_SAMPLES: 1
+  FACT: 1
+  NUM_WORKERS: 8
+
+DATASET:
+  JOINT_TYPE: 'humanml3d'
+
+  UNIMOTION:
+    USE_IMAGES: True  # enable image guidance (effective for H36M only)
+    UNIT_LEN: 1
+    FPS: 20
+    MAX_MOTION_LEN: 200
+    MIN_MOTION_LEN: 20
+
+    # Dataset roots point at the main repository's data/ tree
+    # (see data_preparation/README.md at the repo root); `../` because
+    # training is launched from the cma_vae/ directory.
+    HUMANML3D:
+      ROOT: '../data/UNI_MOTION_269/HumanML3D'
+      SPLIT_ROOT: '../data/UNI_MOTION_269/HumanML3D'
+      MIN_MOTION_LEN: 20
+
+    MOTIONFIX:
+      ROOT: '../data/UNI_MOTION_269/MotionFix'
+      SPLIT_ROOT: '../data/UNI_MOTION_269/MotionFix'
+      MIN_MOTION_LEN: 20
+
+    # H36M provides single-frame motion + paired images
+    H36M:
+      ROOT: '../data/UNI_MOTION_269/H36M'
+      SPLIT_ROOT: '../data/UNI_MOTION_269/H36M'
+      IMAGE_ROOT: '../data/Human3.6M_MMPose/processed/images_fps50_cropped_448x448'
+      IMAGE_PATHS_FILE: '../data/UNI_MOTION_269/H36M/image_paths/h36m_train_269.npy'
+      IMG_SIZE: [448, 448]  # [H, W]
+      JOINTS2D_FILE: '../data/UNI_MOTION_269/H36M/joints2d_aff448.pkl'
+      USE_PRECOMPUTED_JOINTS: true
+
+METRIC:
+  TYPE: []
+
+LOSS:
+  TYPE: mld_kl_align
+  LAMBDA_KL: 1.0e-4        # KL regularization (motion & joint encoders)
+  LAMBDA_KL_ALIGN: 1.0e-4  # KL alignment between the two encoders
+  LAMBDA_REC: 1.0          # feature reconstruction
+  LAMBDA_JOINT: 1.0        # joint reconstruction
+  DIST_SYNC_ON_STEP: False
+
+  USE_KL_WARMUP: true
+  KL_ALIGN_WARMUP_STEPS: 2000  # linear warm-up of the alignment loss
+
+model:
+  vae: true
+  model_type: mld_kl_align
+  latent_dim: [1, 256]
+  ff_size: 1024
+  num_layers: 9
+  num_head: 4
+  droupout: 0.1
+  activation: gelu
+
+  vae_config:
+    normalize_before: false
+    position_embedding: learned
+    arch: all_encoder
+    downsample_rate: 4  # temporal downsampling rate
+
+    kl_align_weight: 0.001  # overridden by LOSS.LAMBDA_KL_ALIGN
+
+    # vision branch (image-guided joint encoder)
+    vision_dim: 128
+    hrnet_channels: 256
+    hrnet_checkpoint: '../deps/hrnet/pose_hrnet_w32_256x192.pth'
+    freeze_hrnet: true
+    num_joints: 22
+    img_size: [448, 448]  # [H, W]
+
+LOGGER:
+  SAVE_CHECKPOINT_EPOCH: 200
+  LOG_EVERY_STEPS: 20
+  VAL_EVERY_STEPS: 200  # (unit: epochs) fed to Lightning's check_val_every_n_epoch
+  TENSORBOARD: True
+  WANDB:
+    PROJECT: null
+    OFFLINE: False
+    RESUME_ID: null

@@ -1,0 +1,10 @@
+[submodule "Unimotion"]
+	path = submodules/Unimotion
+	url = https://github.com/lys5588/trajgs-model.git
+	branch = reference/unimotion-bootstrap
+[submodule "G2VLM"]
+	path = submodules/G2VLM
+	url = https://github.com/InternRobotics/G2VLM.git
+[submodule "Depth-Anything-3"]
+	path = submodules/Depth-Anything-3
+	url = https://github.com/ByteDance-Seed/Depth-Anything-3.git
