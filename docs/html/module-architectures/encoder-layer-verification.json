@@ -1,0 +1,84 @@
+{
+  "scope": "HTML visualization and static source verification; no model forward executed",
+  "pages": [
+    {
+      "page": "encoder-layer-comparison",
+      "viewport": "desktop",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "headings": [
+        "DA3 Camera Encoder · 整体逐层",
+        "DA3 Block · 注意力与 FFN 内部",
+        "CMA-VAE 最早的 Linear · 两条路径共享",
+        "Vision-Motion Encoder · 两路输入怎样融合",
+        "VisionEncoder · 卷积层逐层展开",
+        "Motion Encoder · 纯动作路径逐层",
+        "两个 CMA-VAE Encoder · 9 层与长跳连",
+        "CMA-VAE 单个 EncoderLayer · 内部逐层对照"
+      ],
+      "diagrams": 8,
+      "page_errors": [],
+      "diagram_expand_close": "8 passed"
+    },
+    {
+      "page": "encoder-layer-comparison",
+      "viewport": "mobile",
+      "width": 390,
+      "scrollWidth": 390,
+      "headings": [
+        "DA3 Camera Encoder · 整体逐层",
+        "DA3 Block · 注意力与 FFN 内部",
+        "CMA-VAE 最早的 Linear · 两条路径共享",
+        "Vision-Motion Encoder · 两路输入怎样融合",
+        "VisionEncoder · 卷积层逐层展开",
+        "Motion Encoder · 纯动作路径逐层",
+        "两个 CMA-VAE Encoder · 9 层与长跳连",
+        "CMA-VAE 单个 EncoderLayer · 内部逐层对照"
+      ],
+      "diagrams": 8,
+      "page_errors": [],
+      "diagram_expand_close": "8 passed"
+    },
+    {
+      "page": "index",
+      "viewport": "desktop",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "headings": [
+        "已收录的模块",
+        "两条网络的核心计算路径",
+        "直接对比",
+        "下一步已经确定的接口",
+        "图册维护与来源"
+      ],
+      "diagrams": 1,
+      "page_errors": [],
+      "diagram_expand_close": "1 passed"
+    },
+    {
+      "page": "index",
+      "viewport": "mobile",
+      "width": 390,
+      "scrollWidth": 390,
+      "headings": [
+        "已收录的模块",
+        "两条网络的核心计算路径",
+        "直接对比",
+        "下一步已经确定的接口",
+        "图册维护与来源"
+      ],
+      "diagrams": 1,
+      "page_errors": [],
+      "diagram_expand_close": "1 passed"
+    }
+  ],
+  "local_links_checked": 57,
+  "original_import_files_unchanged": 54,
+  "source_hashes_verified": 19,
+  "visual_inspection": {
+    "panels_checked": 8,
+    "desktop": "1440x1000",
+    "mobile": "390x844",
+    "result": "All layer flows, channel labels, residuals and skip connections inspected; wide diagrams scroll within their container on mobile."
+  }
+}

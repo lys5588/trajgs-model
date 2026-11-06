@@ -9,13 +9,15 @@ file: module-architectures
 ---
 CMA-VAE Motion Encoder 输出轨迹高斯后验。DA3 CameraEnc 输出已知相机的条件 token；两者的网络职责不同。
 
-本轮仅分析与展示现有源码，不调整模型代码。
+网络页保留原版架构分析。新增相机表示转换页，记录已实现的几何模块。
 
-## A 本次新增的两个模块
+## A 已收录的模块
 
 | 架构页 | 内容 | 当前角色 |
 | --- | --- | --- |
+| [四个编码模块逐层对照](encoder-layer-comparison.html) | DA3、输入 Linear、Vision-Motion、Motion；含 QKV、FFN、卷积与跳连 | 当前源码详解 |
 | [CMA-VAE Motion Encoder](motion-encoder.html) | 完整 forward、时间前端、长跳连、单块、后验头 | 已迁入基线 |
+| [相机 9D / 11D 双向转换](camera-pose-codec.html) | 几何表示、坐标约定、往返边界、调用示例 | 已实现工具模块 |
 | [DA3 Camera Encoder](da3-camera-encoder.html) | 9D 参数转换、MLP、Transformer、主干注入 | 参考模块 |
 
 每页均给出层级图、张量形状和本地源码入口。
@@ -59,7 +61,8 @@ DA3 图中保留 S 个视图，输出维度依模型版本而定。
 | 图像或 bbox 输入 | 无；在另一条联合编码路径 | 无；图像由主干处理 |
 
 DA3 的“相机编码”不等于“VAE 相机轨迹编码”。
-它也没有自动将我们尚未定义语义的 11D 转为兼容输入。
+本项目 11D 已定义为中心 3D、旋转前两列 6D 与 FOV 2D。
+DA3 原版 CameraEnc 尚未适配该 11D 输入。
 
 ## D 下一步已经确定的接口
 
@@ -73,7 +76,8 @@ DA3 的“相机编码”不等于“VAE 相机轨迹编码”。
 | 先跑通两个 encoder forward | 后续实施目标，本轮只分析 |
 
 本次详解的 Motion Encoder 是纯序列路径。
-Vision-Motion Encoder 与 bbox 区域提取器将继续收录在此图册。
+Vision-Motion Encoder 已收录在四模块逐层对照页。
+bbox 区域提取器仍待实现与收录。
 
 ## E 图册维护与来源
 

@@ -68,6 +68,18 @@
     {
       "path": "submodules/Depth-Anything-3/src/depth_anything_3/configs/da3-giant.yaml",
       "sha256": "05bdb8f591395f31aaa159e81825519d15e2323ecb6495e07a3a3a4b38673b31"
+    },
+    {
+      "path": "cma_vae/models/architectures/vision_utils.py",
+      "sha256": "1640f6efb92a02d37602e787247b69ecb7b6d0d34b25b86a9ff7ba2089321327"
+    },
+    {
+      "path": "cma_vae/models/architectures/hrnet_wrapper.py",
+      "sha256": "e2632b9c87df05fd83b3062731e59f2430ecc8d877bff693edbb413f9d7af738"
+    },
+    {
+      "path": "cma_vae/models/architectures/pose_hrnet.py",
+      "sha256": "e91b17b76de49ac0934ea75dc21d8f8d3f80d99b0dcc967cf0feea61bc1e4154"
     }
   ]
 }

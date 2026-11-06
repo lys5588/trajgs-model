@@ -4,7 +4,7 @@
 
 训练一个模型，根据拍摄任务的文本指令和真实场景重建后的重采样参考图像，生成符合拍摄要求的相机轨迹位姿序列。参考 UniMotion 的连续 latent 建模方式，先建立相机轨迹的 CMA-VAE 表示，再逐步接入条件生成模型。
 
-当前约定：一条轨迹暂定包含 **20 个按时间排列的相机位姿**；每个位姿用一个 **11D 特征向量**表示。20 表示序列长度，不表示 20 FPS、20 个独立样本或 20 维特征。11D 的分量含义、坐标系、归一化和实际相机参数转换由后续相机模块定义。
+当前约定：一条轨迹暂定包含 **20 个按时间排列的相机位姿**；每个位姿用一个 **11D 特征向量**表示。20 表示序列长度，不表示 20 FPS、20 个独立样本或 20 维特征。11D 已定义为相机中心 3D、旋转前两列 6D 与 FOV 2D。双向转换默认使用 W2C 外参，表示内部存储 C2W；场景参考系和尺度归一化仍由后续数据流程定义。
 
 每个位姿有一张同步拍摄图像和一个 2D bbox。从 bbox 框定的图像区域提取视觉特征，并将它与对应时刻的相机特征一起送入 Vision-Motion Encoder。此处的 segment 暂指 bbox 对应的区域；bbox 不等同于像素级分割 mask，本轮不假设额外分割标注或分割模型。
 
@@ -198,3 +198,9 @@ L = L_camera_reconstruction（待定义）
 当前只分析网络，不修改模型代码。后续实现目标已确定为 `[B,20,11]`、时间不下采样、逐帧 bbox 区域特征与相机特征融合；解码头暂时不动，先验证两个 encoder 的 forward。
 
 [模块架构图册](html/module-architectures/index.html) 持续收录已用模块与参考模块，首批为 CMA-VAE Motion Encoder 和 DA3 CameraEnc。DA3 当前使用 9D 参数与确定性 token，不能直接视作本项目的 11D 高斯后验编码器。
+
+## 相机几何表示转换已实现
+
+新增 `cma_vae/utils/camera.py`，支持 `quaternion_9d` 和 `rotation_6d_11d`。两个接口沿用 DA3 的函数命名与 `[B,S,...]` 形状；本项目默认把 W2C 原始外参编码为 C2W 中心/旋转，再在解码时返回 W2C。`extrinsics_type="c2w"` 可显式使用 DA3 底层工具的 C2W 约定。
+
+11D 逆向以按列的 Gram–Schmidt 构造旋转；两种表示只保存 fx/fy 对应的 FOV，解码输出中心主点与零 skew。完整说明、示例和验证边界见 [相机 codec 页面](html/module-architectures/camera-pose-codec.html)。已有模型通道、encoder、decoder 和配置本轮未改动。

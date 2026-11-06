@@ -2,6 +2,7 @@
 
 根据拍摄任务指令与场景参考图像生成相机轨迹。当前包含原样迁入的 CMA-VAE 基线、相机任务设计文档和框架对比页。
 
+- [相机 9D / 11D 转换](docs/html/module-architectures/camera-pose-codec.html)：原始相机参数与两种表示的双向转换、接口和测试。
 - [三模块计划](docs/plan.md)：数据读取、模型、训练。
 - [CMA-VAE 迁入说明](cma_vae/IMPORT.md)：来源版本及后续适配边界。
 - [原版与相机目标框架对比](docs/html/cma-vae-camera-framework/index.html)：下载后用浏览器打开；GitHub 文件页显示 HTML 源码。
