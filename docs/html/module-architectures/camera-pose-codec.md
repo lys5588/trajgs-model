@@ -1,6 +1,6 @@
 ---
 title: 相机表示 · 9D / 11D 双向转换
-subtitle: 已实现的几何模块，尚未接入网络通道
+subtitle: 已实现的几何模块，供 9D / 11D 相机编码使用
 lang: zh
 template: doc
 theme: shadcn

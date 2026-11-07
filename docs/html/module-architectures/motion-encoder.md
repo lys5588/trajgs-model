@@ -7,7 +7,8 @@ theme: shadcn
 mode: light
 file: motion-encoder
 ---
-当前实现把动作序列编码成高斯后验，再用重参数化采样得到 latent。本页分析迁入代码，尚未执行相机适配。
+本页保留迁入基线分析：动作序列编码为高斯后验，再采样 latent。
+独立相机适配已实现，见 [相机双编码器](camera-encoders.html)。
 
 [模块目录与对比](index.html) · [DA3 Camera Encoder](da3-camera-encoder.html)
 
@@ -178,7 +179,7 @@ $$
 
 ## H 对 20×11D 相机输入意味着什么
 
-这是下一步的接口推导，代码尚未改动。
+这是迁入阶段的接口推导；独立相机实现已另页记录。
 
 | 步骤 | 拟采用的形状 |
 | --- | --- |

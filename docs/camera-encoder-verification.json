@@ -1,0 +1,203 @@
+{
+  "scope": "Camera encoders and decoder interface; no training or geometry output constraints",
+  "unit_tests": {
+    "command": ".local/miniforge3/envs/trajgs/bin/python -m unittest discover -s tests -p 'test_camera*.py' -v",
+    "passed": 29
+  },
+  "architecture_smokes": [
+    {
+      "camera_dim": 9,
+      "device": "cuda",
+      "backbone": "dinov3_vitb16",
+      "backbone_revision": "6876159a11b4df116f30f667f8c9888617df0751",
+      "weights_status": "random_architecture_only",
+      "pretrained_validation": "NOT_RUN",
+      "weights_path": null,
+      "weights_sha256": null,
+      "camera_latent_shape": [
+        20,
+        2,
+        256
+      ],
+      "joint_latent_shape": [
+        20,
+        2,
+        256
+      ],
+      "decoder_shape": [
+        2,
+        20,
+        9
+      ],
+      "gradients": {
+        "camera_embedding": "finite_nonzero",
+        "camera_encoder": "finite_nonzero",
+        "vision_projection": "finite_nonzero",
+        "joint_encoder": "finite_nonzero"
+      },
+      "dinov3_frozen_eval": true,
+      "camera_only": "PASS",
+      "mixed_batch": "PASS",
+      "input_data": "synthetic calibrated cameras and frame-varying RGB images"
+    },
+    {
+      "camera_dim": 11,
+      "device": "cuda",
+      "backbone": "dinov3_vitb16",
+      "backbone_revision": "6876159a11b4df116f30f667f8c9888617df0751",
+      "weights_status": "random_architecture_only",
+      "pretrained_validation": "NOT_RUN",
+      "weights_path": null,
+      "weights_sha256": null,
+      "camera_latent_shape": [
+        20,
+        2,
+        256
+      ],
+      "joint_latent_shape": [
+        20,
+        2,
+        256
+      ],
+      "decoder_shape": [
+        2,
+        20,
+        11
+      ],
+      "gradients": {
+        "camera_embedding": "finite_nonzero",
+        "camera_encoder": "finite_nonzero",
+        "vision_projection": "finite_nonzero",
+        "joint_encoder": "finite_nonzero"
+      },
+      "dinov3_frozen_eval": true,
+      "camera_only": "PASS",
+      "mixed_batch": "PASS",
+      "input_data": "synthetic calibrated cameras and frame-varying RGB images"
+    }
+  ],
+  "pretrained_validation": {
+    "status": "PENDING_USER_WEIGHTS",
+    "reason": "Official download returned 403; official Hugging Face repository is gated. User will download the checkpoint.",
+    "expected_path": "/mnt/d/model/dinov3/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth"
+  },
+  "source_files": [
+    {
+      "path": "cma_vae/models/architectures/camera_cma_vae.py",
+      "sha256": "bbf7db887b1c40647412cc91b0acc418150ff0ef5ebd7f9f65f9d6859aaa3ca9"
+    },
+    {
+      "path": "cma_vae/models/architectures/camera_vision.py",
+      "sha256": "54414fd67cce7f72b1b73fc9e46d63220b9f6c25f2a329f83881ec61a16fd526"
+    },
+    {
+      "path": "cma_vae/configs/config_camera_vae.yaml",
+      "sha256": "a8f92df89b7e5fc930d544d096b45b9cb4b1f52011f2330fb797c8be533ba35a"
+    },
+    {
+      "path": "cma_vae/smoke_camera_encoders.py",
+      "sha256": "82367e9565595f47c8337d90be59b2f4797795f469f62918d91e92d683a1d0fa"
+    },
+    {
+      "path": "tests/test_camera_encoders.py",
+      "sha256": "a61300aabe0bbde7510610bee44799032265a0c76b64af719ff0da3fcb52f274"
+    }
+  ],
+  "documentation_verification": {
+    "pages": [
+      {
+        "page": "camera-encoders",
+        "viewport": "desktop",
+        "width": 1440,
+        "scrollWidth": 1440,
+        "panels": 7,
+        "page_errors": [],
+        "diagrams_checked": 7
+      },
+      {
+        "page": "camera-encoders",
+        "viewport": "mobile",
+        "width": 390,
+        "scrollWidth": 390,
+        "panels": 7,
+        "page_errors": [],
+        "diagrams_checked": 7
+      },
+      {
+        "page": "index",
+        "viewport": "desktop",
+        "width": 1440,
+        "scrollWidth": 1440,
+        "panels": 5,
+        "page_errors": [],
+        "diagrams_checked": 1
+      },
+      {
+        "page": "index",
+        "viewport": "mobile",
+        "width": 390,
+        "scrollWidth": 390,
+        "panels": 5,
+        "page_errors": [],
+        "diagrams_checked": 1
+      },
+      {
+        "page": "encoder-layer-comparison",
+        "viewport": "desktop",
+        "width": 1440,
+        "scrollWidth": 1440,
+        "panels": 8,
+        "page_errors": [],
+        "diagrams_checked": 8
+      },
+      {
+        "page": "encoder-layer-comparison",
+        "viewport": "mobile",
+        "width": 390,
+        "scrollWidth": 390,
+        "panels": 8,
+        "page_errors": [],
+        "diagrams_checked": 8
+      },
+      {
+        "page": "motion-encoder",
+        "viewport": "desktop",
+        "width": 1440,
+        "scrollWidth": 1440,
+        "panels": 8,
+        "page_errors": [],
+        "diagrams_checked": 4
+      },
+      {
+        "page": "motion-encoder",
+        "viewport": "mobile",
+        "width": 390,
+        "scrollWidth": 390,
+        "panels": 8,
+        "page_errors": [],
+        "diagrams_checked": 4
+      },
+      {
+        "page": "camera-pose-codec",
+        "viewport": "desktop",
+        "width": 1440,
+        "scrollWidth": 1440,
+        "panels": 6,
+        "page_errors": [],
+        "diagrams_checked": 2
+      },
+      {
+        "page": "camera-pose-codec",
+        "viewport": "mobile",
+        "width": 390,
+        "scrollWidth": 390,
+        "panels": 6,
+        "page_errors": [],
+        "diagrams_checked": 2
+      }
+    ],
+    "local_links_checked": 87,
+    "original_import_files_unchanged": 54,
+    "visual_inspection": "All seven new panels inspected; desktop and mobile checked; channels, frame pairing, skip connections, and pending-pretrained labels verified."
+  }
+}

@@ -1,0 +1,16 @@
+# Independent encoder smoke configuration; not a human-motion training config.
+camera_dim: 11
+sequence_length: 20
+downsample_rate: 1
+latent_dim: 256
+vision_dim: 256
+camera_ff_size: 1024
+joint_ff_size: 2048
+num_layers: 9
+num_heads: 4
+dropout: 0.1
+crop_size: 224
+freeze_dinov3: true
+dinov3_repo: submodules/DINOv3
+dinov3_weights: /mnt/d/model/dinov3/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth
+dinov3_chunk_size: 20

@@ -1,11 +1,14 @@
 # 模块架构图册
 
-此目录长期收录 TrajGS 使用的模块和用于对比的参考模块。入口为 [index.html](index.html)。网络架构页记录源码分析；新增相机 9D/11D 几何转换模块。当前未调整模型通道、配置、数据读取或解码头，也未运行网络 forward。
+此目录长期收录 TrajGS 使用的模块和用于对比的参考模块。入口为 [index.html](index.html)。原版分析保留作为基线；新增相机 9D/11D 几何转换与双编码器实现。相机架构 forward/backward 已验证，预训练权重验证等待用户下载。
 
 ## 当前条目
 
 | 模块 | 角色 | 页面 | 内容源 |
 | --- | --- | --- | --- |
+| CLS 与 Patch 融合分析 | 候选分析 | [cls-vs-patch-analysis.html](cls-vs-patch-analysis.html) | [cls-vs-patch-analysis.md](cls-vs-patch-analysis.md) |
+| DINOv3 图像处理 | 计算流程详解 | [dinov3-image-flow.html](dinov3-image-flow.html) | [dinov3-image-flow.md](dinov3-image-flow.md) |
+| 相机双编码器 | 已实现 | [camera-encoders.html](camera-encoders.html) | [camera-encoders.md](camera-encoders.md) |
 | 四个编码模块逐层对照 | 当前源码详解 | [encoder-layer-comparison.html](encoder-layer-comparison.html) | [encoder-layer-comparison.md](encoder-layer-comparison.md) |
 | CMA-VAE Motion Encoder | 已迁入基线 | [motion-encoder.html](motion-encoder.html) | [motion-encoder.md](motion-encoder.md) |
 | DA3 CameraEnc | 参考模块 | [da3-camera-encoder.html](da3-camera-encoder.html) | [da3-camera-encoder.md](da3-camera-encoder.md) |
@@ -18,11 +21,11 @@
 - D：原始输入特征维度；d：DA3 token 通道维度。
 - r：时间压缩率；L：CMA-VAE latent 序列长度。
 - DA3 模块内没有时间位置编码，因此不能直接把视图索引 S 当成已经编码的时间。
-- 本轮用户已确定后续相机实现采用 T=20、D=11、r=1；当前源码仍使用原版参数。
+- 相机新实现采用 T=20、D=9/11、r=1；原版分析页面保留 D=269、r=4。
 
 ## 后续模块条目
 
-Vision-Motion Encoder 已在四模块逐层对照页中展开。bbox 区域视觉编码器和最终采用的 Camera Encoder 在分析或实现时各自新增页面。尚未分析的模块不使用占位网页冒充已完成条目。
+原版 Vision-Motion Encoder 在四模块逐层对照页中展开。新 bbox/DINOv3 与 Camera Encoder 已在相机双编码器页收录。后续模块按实际实现继续增加。
 
 每个条目包含：模块职责、输入输出、层级结构、残差与注意力、位置与 mask、默认参数与版本差异、源码证据和实施状态。网络架构与方案建议明确区分。
 
@@ -40,7 +43,7 @@ node /root/.codex/skills/answer-me-with-html/scripts/am.mjs render docs/html/mod
 
 来源版本与 SHA-256 见 [sources.json](sources.json)。页面描述的是这个源码快照；后续改动模型时需同步重读源码并更新图册。
 
-## 本次验证
+## 初版图册验证
 
 - 三页均由 am 成功生成，STE 警告为 0。
 - 已检查桌面 1440×1000 与手机 390×844，共六个页面组合。
@@ -73,3 +76,30 @@ node /root/.codex/skills/answer-me-with-html/scripts/am.mjs render docs/html/mod
 ```
 
 此页及更新后的图册入口通过桌面 1440×1000 和手机 390×844 检查：无脚本错误或整页横向溢出，8 张层级图均可展开和关闭。已目视核对全部 8 个面板；54 个迁入文件与 19 个源码快照哈希一致。验证记录见 [encoder-layer-verification.json](encoder-layer-verification.json)。
+
+
+## 相机双编码器增量
+
+相机实现与数值验证见 [camera-encoder-verification.json](../../camera-encoder-verification.json)。29 项测试与 9D/11D 官方 DINOv3 架构的 CUDA 验证通过；使用显式随机权重，预训练验证待用户下载文件。新增页面保留相同主题与渲染器。
+
+```bash
+node /root/.codex/skills/answer-me-with-html/scripts/am.mjs render docs/html/module-architectures/camera-encoders.md --no-open -o docs/html/module-architectures/camera-encoders.html
+```
+
+
+## DINOv3 图像处理详解
+
+[图像处理详解](dinov3-image-flow.html) 展开 PatchEmbed 的局部投影、196 个 patch、CLS/storage token、Transformer 交互与项目取用的 768 维特征。不修改模型或特征汇聚方式。
+
+```bash
+node /root/.codex/skills/answer-me-with-html/scripts/am.mjs render docs/html/module-architectures/dinov3-image-flow.md --no-open -o docs/html/module-architectures/dinov3-image-flow.html
+```
+
+
+## CLS 与 Patch 融合分析
+
+[分析页](cls-vs-patch-analysis.html) 区分裁剪内部布局、原图构图和三维几何；比较当前 CLS 通道拼接、完整时空 token 及相机条件 patch 汇聚。候选设计均未实施，本次不修改模型或配置。
+
+```bash
+node /root/.codex/skills/answer-me-with-html/scripts/am.mjs render docs/html/module-architectures/cls-vs-patch-analysis.md --no-open -o docs/html/module-architectures/cls-vs-patch-analysis.html
+```

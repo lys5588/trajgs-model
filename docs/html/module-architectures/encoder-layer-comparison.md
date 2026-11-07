@@ -11,7 +11,8 @@ DA3 的相机 token 宽度为 1024（Large）。
 CMA-VAE 的动作宽度为 256，联合宽度为 384，后验 latent 均为 256。
 
 本页分析当前源码。CMA-VAE 使用迁入配置 D=269、r=4。
-图中的 T=20 是形状示例；下一步相机版的 D=9/11、r=1 尚未接入网络。
+图中的 T=20 是形状示例。
+相机 D=9/11、r=1 已独立实现，见 [相机双编码器](camera-encoders.html)。
 
 | 记号 | 含义 |
 | --- | --- |
@@ -134,9 +135,9 @@ r=4 时，实际层序列如下。
 | 6 | GELU | [B,256,5] |
 | 7 | Permute B,C,L → B,L,C | [B,5,256] |
 
-相机版后续可将输入层改为 9 → 256 或 11 → 256。
-确定的 r=1 会跳过时间卷积，保留 20 步。
-这两项网络改动尚未实施。
+相机新实现使用 9 → 256 或 11 → 256。
+r=1 跳过时间卷积，保留 20 步。
+本页继续展示原版基线，不替换其历史通道。
 
 来源：[CMAVAE 构造与 TemporalDownsample](../../../cma_vae/models/architectures/mld_vae_kl_align.py)。
 
@@ -180,8 +181,8 @@ mu 与 logvar\n各 5 × B × 256 -> Normal.rsample 与 mask\nz 为 5 × B × 256
 因此应提供单帧图像；不能直接按注释传入整段 20 帧视频。
 没有图像时，代码使用 [B,L,128] 零特征。
 
-我们的逐帧 bbox 特征与对应相机特征融合，是后续接口替换。
-当前代码仍使用关节采样与单帧广播。
+逐帧 bbox 融合已在独立相机模型中实现。
+本页分析的原版代码仍使用关节采样与单帧广播。
 
 来源：[encode_joint 与 get_vision_feats](../../../cma_vae/models/architectures/mld_vae_kl_align.py) · [wrapper 的单帧接口](../../../cma_vae/models/modeltype/mld_kl_align.py)。
 

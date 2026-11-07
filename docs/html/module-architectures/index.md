@@ -9,12 +9,15 @@ file: module-architectures
 ---
 CMA-VAE Motion Encoder 输出轨迹高斯后验。DA3 CameraEnc 输出已知相机的条件 token；两者的网络职责不同。
 
-网络页保留原版架构分析。新增相机表示转换页，记录已实现的几何模块。
+原版分析作为基线保留。相机双编码器与几何转换已独立实现。
 
 ## A 已收录的模块
 
 | 架构页 | 内容 | 当前角色 |
 | --- | --- | --- |
+| [CLS 与 Patch 融合分析](cls-vs-patch-analysis.html) | 空间信息、相机查询、构图几何与计算量 | 候选分析，未修改模型 |
+| [DINOv3 图像处理详解](dinov3-image-flow.html) | 像素、patch、CLS 与 768 维特征的关系 | 当前实现详解 |
+| [相机 9D/11D 双编码器](camera-encoders.html) | 逐帧 bbox、DINOv3、256/512 通道与验证状态 | 已实现；预训练权重验证待完成 |
 | [四个编码模块逐层对照](encoder-layer-comparison.html) | DA3、输入 Linear、Vision-Motion、Motion；含 QKV、FFN、卷积与跳连 | 当前源码详解 |
 | [CMA-VAE Motion Encoder](motion-encoder.html) | 完整 forward、时间前端、长跳连、单块、后验头 | 已迁入基线 |
 | [相机 9D / 11D 双向转换](camera-pose-codec.html) | 几何表示、坐标约定、往返边界、调用示例 | 已实现工具模块 |
@@ -64,20 +67,21 @@ DA3 的“相机编码”不等于“VAE 相机轨迹编码”。
 本项目 11D 已定义为中心 3D、旋转前两列 6D 与 FOV 2D。
 DA3 原版 CameraEnc 尚未适配该 11D 输入。
 
-## D 下一步已经确定的接口
+## D 相机实现的当前状态
 
-| 约定 | 状态 |
+| 接口 | 状态 |
 | --- | --- |
-| 相机输入 `[B,20,11]` | 已确定，尚未修改代码 |
-| 时间维不下采样，r=1 | 已确定，尚未修改配置 |
-| 每时刻图像与 bbox 配对 | 已确定，区域编码待实现 |
-| 相机与视觉特征逐时刻融合 | 已确定，融合路径待实现 |
-| 相机解码头 | 暂时不动 |
-| 先跑通两个 encoder forward | 后续实施目标，本轮只分析 |
+| camera_dim=9 或 11 | 已实现，同一类初始化切换 |
+| 时间维不下采样，r=1 | 已实现，始终 20 步 |
+| 每时刻 bbox 裁剪 | 已实现，直接拉伸到 224×224 |
+| 视觉特征 | 冻结 DINOv3 ViT-B/16 CLS，768→256 |
+| 联合融合 | 同时刻 256+256→512 |
+| Decoder | 保留结构，输出宽度为 9 或 11 |
+| 两个 encoder forward/backward | 真实 DINOv3 架构通过；显式随机权重 |
+| 预训练权重集成 | 待用户下载至 /mnt/d/model |
 
-本次详解的 Motion Encoder 是纯序列路径。
-Vision-Motion Encoder 已收录在四模块逐层对照页。
-bbox 区域提取器仍待实现与收录。
+本页 B/C 对比的是原版 CMA-VAE 与 DA3。
+相机新实现、接口与逐层通道见新增双编码器页面。
 
 ## E 图册维护与来源
 
@@ -92,4 +96,4 @@ bbox 区域提取器仍待实现与收录。
 | [项目计划](../../plan.md) | 数据、模型、训练安排 |
 | [上一轮整体框架对比](../cma-vae-camera-framework/index.html) | 原版 CMA-VAE 与相机目标方案 |
 
-图中结论来自当前本地实现，不代表已跑通相机编码或加载预训练模型。
+原版分析与相机新实现分开记录。预训练验证状态以相机页面为准。
